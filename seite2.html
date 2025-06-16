@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodePilot – Java Kurs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style2.css">
+  <style>
+
+
+/* Fortschritts-Text */
+.progress-text small {
+  font-size: 9px;
+}
+
+    .user-fixed {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 999;
+    }
+
+    .user-fixed img {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+    }
+
+    .user-fixed span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: white;
+    }
+
+    .user-fixed button {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 6px 10px;
+      background: #ffd500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    body.light-mode .user-fixed span {
+      color: black;
+    }
+
+    .exercise span strong {
+      margin-right: 8px;
+    }
+
+    .progress-text small {
+      font-size: 15px;
+      font-weight: bold; 
+    }
+
+    .badge-box {
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px dashed #ffd500;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+body.light-mode .badge-box {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: #bca600;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.badge-grid img {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  transition: transform 0.3s ease;
+}
+
+.badge-grid img:hover {
+  transform: scale(1.1);
+}
+
+.badge-grid img {
+  position: relative;
+}
+
+.badge {
+  position: relative;
+  display: inline-block;
+}
+
+.badge::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  white-space: nowrap;
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.badge:hover::after {
+  opacity: 1;
+}
+
+.badge.locked img {
+  filter: grayscale(100%) brightness(0.6);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.badge img.locked {
+  filter: grayscale(100%) brightness(0.6);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+body {
+      font-family: Arial, sans-serif;
+      background: #0a0a23;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .slider-container {
+  width: 1165px;
+  height: 215px;
+  margin: 20px auto;
+  overflow: hidden;
+  background-color: #111427; /* exakt wie .sidebar und .progress-box */
+  border: 3px solid #1f243b;
+  border-radius: 6px;
+  margin-top: -15px;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+body.light-mode .slider-container {
+  background-color: #ffffff; /* exakt wie .sidebar im Light Mode */
+  border-color: #ccc;
+}
+
+    .slider-track {
+      display: flex;
+      width: 100%;
+      transition: transform 1s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .slide img {
+  width: 250px;
+  height: auto;
+  object-fit: contain;
+  margin-right: 30px;
+  border-radius: 8px;
+  border: 2px solid #000;
+  box-shadow: 0 0 10px #000;
+}
+
+
+    .slide-text {
+      padding: 20px;
+      font-size: 20px;
+      line-height: 2;
+    }
+
+    code {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #ffd500;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- 🔐 Login-Schutz -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      alert("Bitte logge dich zuerst ein.");
+      window.location.href = "login.html";
+    }
+  });
+</script>
+
+
+<!-- Navigation -->
+<div class="navbar">
+  <div class="navbar-left">
+    <div class="logo">
+      <img src="rakete.png" alt="Logo" />
+      CodePilot
+    </div>
+    <a href="seite1.html">Home</a>
+    <a href="index.html">AI</a>
+    <a href="seite2.html">Quiz</a>
+    <a href="wiki.html">Wiki</a>
+    <a href="konto.html">Konto</a>
+    <a href="#" class="sign-up-btn" id="loginStatusBtn">Sign up</a>
+    <button id="toggle-mode" class="toggle-mode-btn">🌙</button>
+  </div>
+</div>
+
+<!-- Benutzeranzeige oben rechts -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const loginBtn = document.getElementById('loginStatusBtn');
+
+    if (user && loginBtn) {
+      loginBtn.textContent = "Logged In";
+      loginBtn.style.pointerEvents = "none";
+      loginBtn.style.backgroundColor = "#ffd500";
+      loginBtn.style.color = "#000";
+    }
+
+    if (user) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "user-fixed";
+
+      const avatar = document.createElement("img");
+      avatar.src = user.character || "character1.gif";
+
+      const name = document.createElement("span");
+      name.textContent = user.username;
+
+      const logout = document.createElement("button");
+      logout.textContent = "Logout";
+      logout.onclick = () => {
+        localStorage.removeItem("user");
+        window.location.href = "login.html";
+      };
+
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(name);
+      wrapper.appendChild(logout);
+      document.body.appendChild(wrapper);
+    }
+  });
+ 
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) return;
+
+    try {
+      const res = await fetch("http://localhost:3000/api/get-user-stats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: user.username })
+      });
+
+      const data = await res.json();
+      // Automatische Korrektur falls badges < erwartetem Wert
+const expectedBadges = Math.floor(data.exercises / 5);
+if (data.badges < expectedBadges) {
+  await fetch("http://localhost:3000/api/update-badges", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: user.username,
+      badges: expectedBadges
+    })
+  });
+  data.badges = expectedBadges; // lokal auch anpassen
+}
+
+
+      // 🟦 Fortschrittsbalken setzen
+      const setBar = (fillId, labelId, value, total) => {
+        const percent = Math.min(100, Math.round((value / total) * 100));
+        document.getElementById(fillId).style.width = percent + "%";
+        document.getElementById(labelId).textContent = value;
+      };
+
+      setBar("exercise-fill", "exercise-label", data.exercises, 40);
+      setBar("xp-fill", "xp-label", data.xp, 685);
+      setBar("streak-fill", "streak-label", data.streak, 7);
+
+      // 🟨 Badge-Freischaltung
+     // 🟨 Badge-Freischaltung (inkl. Fortschrittsbalken)
+const totalExercises = data.exercises || 0;
+const badgeGrid = document.getElementById("badgeGrid");
+const thresholds = [5, 10, 15, 20, 25, 30, 35, 40, 45];
+let unlockedCount = 0;
+
+badgeGrid.querySelectorAll(".badge").forEach((badgeDiv, index) => {
+  const img = badgeDiv.querySelector("img");
+  if (totalExercises >= thresholds[index]) {
+    badgeDiv.classList.remove("locked");
+    if (img) img.classList.remove("locked");
+    unlockedCount++;
+  } else {
+    badgeDiv.classList.add("locked");
+    if (img) img.classList.add("locked");
+  }
+});
+
+// 🟦 Kursabzeichen-Balken jetzt korrekt setzen
+setBar("badge-fill", "badge-label", unlockedCount, thresholds.length);
+
+
+
+    } catch (err) {
+      console.error("Fehler beim Laden des Fortschritts und der Badges:", err);
+    }
+  });
+</script>
+
+
+
+
+
+<!-- Hero -->
+<div class="hero-background">
+  <h1>Java</h1>
+  <p>Lerne Java und beherrsche objektorientierte Programmierung sowie wichtige Datenstrukturen für effiziente Anwendungen</p>
+  <button class="cta-button">Kostenlos Lernen</button>
+</div>
+
+<!-- Kurs Navigation -->
+<div class="content-section">
+  <div class="sidebar" id="sidebar"></div>
+
+<div class="side-panel">
+  <div class="info-box progress-box">
+    <h2>Dein Fortschritt</h2>
+
+    <div class="progress-entry blue">
+      <img src="buch.png" alt="Übungen">
+      <div class="progress-text">
+        <div>ÜBUNGEN</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="exercise-fill"></div>
+        </div>
+        <small id="exercise-label">0</small>
+      </div>
+    </div>
+
+    <div class="progress-entry red">
+      <img src="stern.png" alt="XP">
+      <div class="progress-text">
+        <div>GESAMT-XP</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="xp-fill"></div>
+        </div>
+        <small id="xp-label">0</small>
+      </div>
+    </div>
+
+    <div class="progress-entry green">
+      <img src="abzeichen.png" alt="Abzeichen">
+      <div class="progress-text">
+        <div>Kursabzeichen</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="badge-fill"></div>
+        </div>
+        <small id="badge-label">0</small>
+      </div>
+    </div>
+
+    <div class="progress-entry purple">
+      <img src="feuer.png" alt="Streak">
+      <div class="progress-text">
+        <div>TÄGLICHE STREIFEN</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="streak-fill"></div>
+          </div>
+          <small id="streak-label">0</small>
+          </div>
+  </div>
+</div>
+  <div class="info-box progress-box">
+  <h2 style="font-family: 'Press Start 2P', monospace; font-size: 16px;">Kapitel-Badges</h2>
+ <div class="badge-grid" id="badgeGrid">
+  <div class="badge" data-tooltip="Hello World"><img src="HelloWorldx.png" alt="Hello World" /></div>
+  <div class="badge" data-tooltip="Variablen"><img src="Variablenx.png" alt="Variablen" /></div>
+  <div class="badge" data-tooltip="Kontrollfluss"><img src="Kontrollfussx.png" alt="Kontrollfluss" /></div>
+  <div class="badge" data-tooltip="Schleifen"><img src="Schleifenx.png" alt="Schleifen" /></div>
+  <div class="badge" data-tooltip="Vererbung"><img src="Vererbungx.png" alt="Vererbung" /></div>
+  <div class="badge" data-tooltip="Arrays"><img src="Arraysx.png" alt="Arrays" /></div>
+  <div class="badge" data-tooltip="Methoden"><img src="Methodenx.png" alt="Methoden" /></div>
+  <div class="badge" data-tooltip="Klassen & Objekte"><img src="KlassenUndObjektex.png" alt="Klassen & Objekte" /></div>
+  <div class="badge" data-tooltip="Exception Handling"><img src="ExceptionHandlingx.png" alt="Exception Handling" /></div>
+</div>
+</div>
+    </div>
+  </div>
+  <div class="slider-container">
+    <div class="slider-track" id="sliderTrack">
+      <!-- Slides werden per JavaScript eingefügt -->
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  const toggleBtn = document.getElementById('toggle-mode');
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-mode');
+    toggleBtn.textContent = '☀️';
+  }
+  toggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    toggleBtn.textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+
+  const sections = [
+    'Hello World', 'Variablen', 'Kontrollfluss', 'Schleifen',
+    'Vererbung', 'Arrays', 'Methoden', 'Klassen und Objekte', 'Exception Handling'
+  ];
+
+  const levelNamesPerSection = [
+    ["Konsole aktiviert!", "Der Fall Java vs. JavaScript", "// Ready to Comment", "Mission: Hello World()", "Level-Up: Erste Ausgabe"],
+    ["Bit der Wahrheit", "Variable geladen", "2,7 im Speicher", "Variablen im Einsatz", "Dateninitialisierung"],
+    ["If vs. Switch", "Decision Point: IF aktiviert", "Pfad der Bedingungen", "Vergleichsoperatoren", "Kontrollzentrum"],
+    ["Zählschleife aktiv", "Durchlaufkontrolle", "Count Control", "Die drei Schleifen", "Von 1 bis 10"],
+    ["Stammbaum aktiviert", "Vererbungslogik", "Erbe mit Konstruktion", "Die Rückkehr der Methode", "Vererbungsprüfung: Echo der Klassen"],
+    ["ArrayCore", "Zahlen im Griff", "Array-Limit", "DataSlot: Zugriff erfolgreich", "Katze, Hund, Maus"],
+    ["Methode bereit", "static geladen", "return complete", "Methoden-Doppelpack", "Berechne & Rückgabe"],
+    ["ClassStart", "ObjektCore", "Zustand definiert", "Objekt in Aktion", "DriveTest: Info anzeigen"],
+    ["ExceptionCore", "Fehlerkontrolle", "CodeExit", "try, catch, finally", "Zahl oder Ausnahme"]
+  ];
+
+  const sidebar = document.getElementById('sidebar');
+
+  sections.forEach((title, i) => {
+    const section = document.createElement('div');
+    section.className = 'section';
+
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    const circle = document.createElement('div');
+    circle.className = 'circle-number';
+    circle.textContent = i + 1;
+    header.appendChild(circle);
+    header.appendChild(document.createTextNode(' ' + title));
+    section.appendChild(header);
+
+    const list = document.createElement('div');
+    list.className = 'exercise-list';
+
+    for (let j = 1; j <= 5; j++) {
+      const exercise = document.createElement('div');
+      exercise.className = 'exercise';
+
+      const span = document.createElement('span');
+      const levelName = levelNamesPerSection[i][j - 1] || "";
+      span.innerHTML = `<strong>Übung ${j}</strong>&nbsp;&nbsp;${levelName}`;
+
+
+      const button = document.createElement('button');
+      button.className = 'start-btn';
+      button.textContent = 'Start';
+      button.onclick = () => {
+        window.location.href = `quiz${i + 1}.${j}.html`;
+      };
+
+      exercise.appendChild(span);
+      exercise.appendChild(button);
+      list.appendChild(exercise);
+    }
+
+    section.appendChild(list);
+    sidebar.appendChild(section);
+  });
+
+  // Toggle Sidebar Sections
+  document.querySelectorAll('.section-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const list = header.nextElementSibling;
+      document.querySelectorAll('.exercise-list').forEach(el => {
+        if (el !== list) el.classList.remove('open');
+      });
+      if (list && list.classList.contains('exercise-list')) {
+        list.classList.toggle('open');
+      }
+    });
+  });
+});
+
+</script>
+
+<script>
+  const tipGroups = [
+    [ // Hello World
+      {
+        image: "helloworld.png",
+        text: `Das Grundgerüst jedes Java-Programms beginnt mit <code>public class Main</code> und der <code>main</code>-Methode. Diese ist der Einstiegspunkt.`
+      },
+      {
+        image: "helloworld.png",
+        text: `Mit <code>System.out.println("Hello World");</code> gibst du Text in der Konsole aus – ideal für erste Tests und Debugging.`
+      }
+    ],
+    [ // Variablen
+      {
+        image: "variablen.png",
+        text: `Variablen speichern Werte. Nutze z. B. <code>int</code> für ganze Zahlen, <code>double</code> für Kommazahlen und <code>String</code> für Text.`
+      },
+      {
+        image: "variablen.png",
+        text: `Du kannst eine Variable deklarieren und direkt initialisieren: <code>String name = "Anna";</code>. Achte auf den passenden Datentyp.`
+      }
+    ],
+    [ // Kontrollfluss
+      {
+        image: "kontrollfluss.png",
+        text: `Mit <code>if</code>, <code>else if</code> und <code>else</code> steuerst du den Programmfluss basierend auf Bedingungen.`
+      },
+      {
+        image: "kontrollfluss.png",
+        text: `Ein <code>switch</code>-Statement ist praktisch, wenn viele Fälle überprüft werden – z. B. Wochentage oder Menüs.`
+      }
+    ],
+    [ // Schleifen
+      {
+        image: "schleifen.png",
+        text: `Eine <code>for</code>-Schleife eignet sich ideal für Durchläufe mit fester Anzahl:</br> <code>for(int i=0; i&lt;5; i++)</code>.`
+      },
+      {
+        image: "schleifen.png",
+        text: `Mit einer <code>while</code>-Schleife kannst du Code wiederholen, solange eine Bedingung erfüllt ist – z. B. Benutzereingabe.`
+      }
+    ],
+    [ // Vererbung
+      {
+        image: "vererbung.png",
+        text: `Mit <code>extends</code> kann eine Klasse von einer anderen erben – so nutzt du vorhandene Funktionen weiter.`
+      },
+      {
+        image: "vererbung.png",
+        text: `In Unterklassen kannst du Methoden überschreiben (Override) und mit <code>super()</code> auf die Elternklasse zugreifen.`
+      }
+    ],
+    [ // Arrays
+      {
+        image: "arrays.png",
+        text: `Ein Array speichert mehrere Werte eines Typs: <code>int[] zahlen = {1, 2, 3};</code>. Es hat feste Länge.`
+      },
+      {
+        image: "arrays.png",
+        text: `Zugriff erfolgt über Indizes ab 0: <code>zahlen[0]</code> gibt das erste Element zurück.`
+      }
+    ],
+    [ // Methoden
+      {
+        image: "methoden.png",
+        text: `Methoden helfen, deinen Code zu strukturieren. Sie können Parameter haben und Werte zurückgeben.`
+      },
+      {
+        image: "methoden.png",
+        text: `Beispiel: <code>int quadriere(int x) { return x * x; }</code> definiert eine Methode, die ein Quadrat berechnet.`
+      }
+    ],
+    [ // Klassen & Objekte
+      {
+        image: "klassenobjekte.png",
+        text: `In Java definierst du eine Klasse als Bauplan und erzeugst Objekte mit <code>new</code>.`
+      },
+      {
+        image: "klassenobjekte.png",
+        text: `Objekte besitzen Attribute (Daten) und Methoden (Funktionen). Zugriff z. B. über <code>auto.fahre()</code>.`
+      }
+    ],
+    [ // Exception Handling
+      {
+        image: "exceptionhandling.png",
+        text: `Mit <code>try</code> und <code>catch</code> kannst du Fehler (z. B. Division durch 0) abfangen, ohne dass das Programm abstürzt.`
+      },
+      {
+        image: "exceptionhandling.png",
+        text: `Im <code>finally</code>-Block kannst du Code einfügen, der immer ausgeführt wird – auch bei einem Fehler.`
+      }
+    ]
+  ];
+
+  // Tipps thematisch abwechselnd zusammenstellen
+  const tips = [];
+  const maxTipsPerTheme = Math.max(...tipGroups.map(g => g.length));
+
+  for (let i = 0; i < maxTipsPerTheme; i++) {
+    for (let group of tipGroups) {
+      if (group[i]) tips.push(group[i]);
+    }
+  }
+
+  const track = document.getElementById("sliderTrack");
+
+  tips.forEach(tip => {
+    const slide = document.createElement("div");
+    slide.className = "slide";
+    slide.innerHTML = `
+      <img src="${tip.image}" alt="Tipp">
+      <div class="slide-text">${tip.text}</div>
+    `;
+    track.appendChild(slide);
+  });
+
+  let current = 0;
+  function nextSlide() {
+    current = (current + 1) % tips.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+  }
+
+  setInterval(nextSlide, 5000);
+</script>
+
+</style>
+
+
+</body>
+</html>

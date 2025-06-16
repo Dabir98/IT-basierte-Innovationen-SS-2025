@@ -1,0 +1,47 @@
+[
+  {
+    "username": "Dabir",
+    "password": "123456",
+    "character": "character9.gif",
+    "xp": 1400,
+    "exercises": 70,
+    "badges": 14,
+    "streak": 0
+  },
+  {
+    "username": "Rezan",
+    "password": "123456",
+    "character": "character4.gif",
+    "xp": 0,
+    "exercises": 0,
+    "badges": 0,
+    "streak": 0
+  },
+  {
+    "username": "Test",
+    "password": "12345",
+    "character": "character2.gif",
+    "xp": 0,
+    "exercises": 0,
+    "badges": 0,
+    "streak": 0
+  },
+  {
+    "username": "Dania",
+    "password": "12345",
+    "character": "character6.gif",
+    "xp": 1220,
+    "exercises": 61,
+    "badges": 12,
+    "streak": 0
+  },
+  {
+    "username": "test1",
+    "password": "123456",
+    "character": "character12.gif",
+    "xp": 280,
+    "exercises": 14,
+    "badges": 2,
+    "streak": 0
+  }
+]

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lädt...</title>
+  <style>
+    body {
+      background: black;
+      color: #ffd500;
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .loader {
+      font-size: 16px;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="loader">LOADING LEVEL...</div>
+
+  <script>
+    const ziel = new URLSearchParams(window.location.search).get("ziel") || "index.html";
+
+    // Speichere, dass für diese Seite der Ladebildschirm gezeigt wurde
+    sessionStorage.setItem("loaded_" + ziel, "true");
+
+    setTimeout(() => {
+      window.location.href = ziel;
+    }, 2500); // nach 2,5 Sekunden weiterleiten
+  </script>
+</body>
+</html>

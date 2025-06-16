@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodePilot – Registrierung</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+  body {
+  background-color: #0a0a23;
+  background-image: url('night.jpeg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: white;
+  font-family: 'Press Start 2P', monospace;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  transition: background 0.5s ease, color 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+    body.light-mode {
+      background-color: #ffffff;
+      background-image: url('day.jpeg');
+      color: #111;
+    }
+
+    .toggle-mode-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 999;
+      background: none;
+      border: 2px solid white;
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    body.light-mode .toggle-mode-btn {
+      border-color: #111;
+      color: #111;
+    }
+
+    .register-container {
+      background-color: rgba(31, 36, 59, 0.85);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px #ffd500;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      color: white;
+    }
+
+    body.light-mode .register-container {
+      background-color: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 12px #999;
+      color: #111;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      font-size: 12px;
+      padding: 12px;
+      width: 90%;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    input:focus {
+  transform: scale(1.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px #ffffff;
+  outline: none;
+}
+
+body.light-mode input:focus {
+  transform: scale(1.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px #000000;
+  outline: none;
+}
+
+
+    .login-btn {
+  position: relative;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  background-color: #ffd500;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #806a01;
+  transition: box-shadow 0.2s ease;
+  margin-top: 10px;
+  animation: pulseGlow 2s infinite;
+}
+
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 #000;
+  background-color: #ffd500;
+}
+
+.login-btn:active {
+  transform: translateY(5px);
+  box-shadow: 0 2px 0 #806a01;
+}
+
+body.light-mode .login-btn {
+  color: black;
+  background-color: #ffd500;
+  box-shadow: 0 4px 0 #bca600;
+}
+
+    .message {
+      margin-top: 15px;
+      font-size: 12px;
+    }
+
+    .error { color: #ff5555; }
+    .success { color: #00ffcc; }
+
+    a {
+      display: inline-block;
+      margin-top: 15px;
+      color: #ffd500;
+      font-size: 10px;
+      text-decoration: none;
+    }
+
+    .character-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .arrow {
+      font-size: 20px;
+      color: white;
+      background: transparent;
+      border: 2px solid white;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s, box-shadow 0.2s ease;
+    }
+
+    .arrow:hover {
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 8px #ffd500;
+    }
+
+    .arrow:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 8px #ffd500;
+}
+
+
+    .character {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+      background-color: transparent;
+    }
+
+    .character-wrapper {
+      position: relative;
+      z-index: 3;
+    }
+
+    .shadow {
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 15px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 50%;
+      filter: blur(1px);
+    }
+
+    .description-box {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      background-color: #1f243b;
+      color: #ffd500;
+      padding: 15px;
+      border: 3px solid #ffd500;
+      border-radius: 10px;
+      font-size: 10px;
+      line-height: 1.6;
+      letter-spacing: 0.5px;
+      width: 100%;
+      max-width: 380px;
+      height: 70px;
+      text-align: left;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 10px #ffd500;
+      overflow: hidden;
+      white-space: pre-wrap;
+      text-shadow: 1px 1px 0 #000;
+    }
+
+    body.light-mode .arrow {
+      border-color: #111;
+      color: #111;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    body.light-mode .arrow:hover {
+      background: rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 8px #999;
+    }
+
+    body.light-mode .description-box {
+      background-color: rgba(255, 255, 255, 0.85);
+      color: #222;
+      border-color: #ffd500;
+      box-shadow: 0 0 10px #aaa;
+      text-shadow: none;
+    }
+
+    body.light-mode .shadow {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .preview-character {
+      width: 64px;
+      height: 64px;
+      opacity: 0.3;
+      filter: blur(1px);
+      pointer-events: none;
+    }
+
+    .character.preview {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+    }
+
+    .left-preview, .right-preview {
+      transform: scale(0.9);
+    }
+
+    body.light-mode .preview-character {
+      opacity: 0.2;
+    }
+
+    /* Animationen */
+    .character.slide {
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: scale(0.85) translateY(10px);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .preview-character.fade {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+    }
+
+    .description-box.fade {
+      animation: fadeInText 0.3s ease;
+    }
+
+    @keyframes fadeInText {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes floatText {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.float-text {
+  display: inline-block;
+  animation: floatText 1.5s ease-in-out infinite;
+  will-change: transform;
+  pointer-events: none;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 4px #ffd500, 0 0 8px #ffd500;
+  }
+  50% {
+    box-shadow: 0 0 12px #ffd500, 0 0 12px #ffd500;
+  }
+}
+@keyframes floatText {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.floating-logo {
+  animation: floatText 2s ease-in-out infinite;
+  will-change: transform;
+  pointer-events: none;
+}
+
+  </style>
+</head>
+<body>
+
+  <button id="toggle-mode" class="toggle-mode-btn">🌙</button>
+
+  <div class="hero-title" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 100px; margin-bottom: 0;">
+  <h1 class="floating-logo" style="font-family: 'Press Start 2P', monospace; font-size: 50px; color: white; text-shadow: 1px 1px 0 #000;">
+    CodePilot
+  </h1>
+  <img src="rakete.png" alt="Rakete" class="rakete" style="height: 60px;">
+</div>
+
+
+  <div class="register-container">
+    <h1 class="float-text">Konto erstellen</h1>
+    <form id="register-form">
+      <input type="text" id="username" placeholder="Benutzername" required><br>
+      <input type="password" id="password" placeholder="Passwort" required><br>
+
+      <div class="character-selector">
+        <button type="button" class="arrow" onclick="changeCharacter(-1)">&#60;</button>
+
+        <div class="preview-character left-preview">
+          <img id="prev-character" class="character preview" src="" alt="Vorheriger Charakter">
+        </div>
+
+        <div class="character-wrapper">
+          <img id="character-img" class="character" src="character1.gif" alt="Charakter">
+          <div class="shadow"></div>
+        </div>
+
+        <div class="preview-character right-preview">
+          <img id="next-character" class="character preview" src="" alt="Nächster Charakter">
+        </div>
+
+        <button type="button" class="arrow" onclick="changeCharacter(1)">&#62;</button>
+      </div>
+
+      <div class="description-box" id="description-box"></div>
+
+      <button type="submit" class="login-btn">Registrieren</button>
+
+      <p id="register-msg" class="message"></p>
+      <a href="login.html">Zurück zum Login</a>
+    </form>
+  </div>
+
+  <script>
+    const characterImages = [
+      'character1.gif', 'character2.gif', 'character3.gif', 'character4.gif',
+      'character5.gif', 'character6.gif', 'character7.gif', 'character8.gif',
+      'character9.gif', 'character10.gif', 'character11.gif', 'character12.gif'
+    ];
+
+    const characterDescriptions = [
+      '"Cyron – Ein cybernetischer Krieger aus der Eiszeit. Kühl im Kopf, tödlich im Kampf."',
+      '"Pixelkaiser – Ein königlicher Streiter mit Krone und rotem Umhang. Seine Loyalität kennt keine Grenzen."',
+      '"Rex – Der pixelige Rebell mit Stirnband und stählerner Faust. Kämpft für Gerechtigkeit und Frühstücksflocken!"',
+      '"Nullbit – Ein gescheitertes Experiment der 8-Bit-Wissenschaft. Kein Gesicht, kein Name – nur Code."',
+      '"Neonshade – Ein Schatten aus den Tiefen der Zukunft. Niemand weiß, wer sich unter der Maske verbirgt."',
+      '"Lunara – Eine rätselhafte Magierin mit himmelblauen Haaren. Hüterin vergessener Zauber."',
+      '"Lea – Eine Naturwächterin mit grüner Aura. Ihre Blätter flüstern von alten Legenden und schnellen Fluchten."',
+      '"Shadow – Der heldenhafte Krieger der Nordlande. Hat mehr Mut als Pixel in seinem Schwertgriff."',
+      '"Daxter – Ein lautloser Kämpfer aus den Schatten von Bitō. Sein virtueller Mantel weht nur, wenn Gefahr droht."',
+      '"Glitron – Ein tanzender Datenspeer aus der Galaxie Zeta. Seine Bewegungen sind Code – sein Herz ein Bug."',
+      '"Bluette – Die Wirbelwind-Zauberin mit kühlem Blick. Kontrolliert Regen, Wind und dein Schicksal."',
+      '"Hexa – Die violette Schattenhexe mit flammenden Augen. Flüstert Zauber, die selbst die Zeit erschüttern."'
+    ];
+
+    let index = 0;
+    const img = document.getElementById('character-img');
+    const descBox = document.getElementById('description-box');
+    const prevImg = document.getElementById('prev-character');
+    const nextImg = document.getElementById('next-character');
+    let typingInterval;
+
+    function typeText(text) {
+      clearInterval(typingInterval);
+      descBox.textContent = '';
+      let i = 0;
+      typingInterval = setInterval(() => {
+        if (i < text.length) {
+          descBox.textContent += text[i];
+          i++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, 35);
+    }
+
+    function changeCharacter(direction) {
+      index = (index + direction + characterImages.length) % characterImages.length;
+
+      img.classList.remove('slide');
+      void img.offsetWidth;
+      img.src = characterImages[index];
+      img.classList.add('slide');
+
+      const prevIndex = (index - 1 + characterImages.length) % characterImages.length;
+      const nextIndex = (index + 1) % characterImages.length;
+
+      prevImg.classList.remove('fade');
+      nextImg.classList.remove('fade');
+      void prevImg.offsetWidth;
+      void nextImg.offsetWidth;
+      prevImg.src = characterImages[prevIndex];
+      nextImg.src = characterImages[nextIndex];
+      prevImg.classList.add('fade');
+      nextImg.classList.add('fade');
+
+      descBox.classList.remove('fade');
+      void descBox.offsetWidth;
+      typeText(characterDescriptions[index]);
+      descBox.classList.add('fade');
+    }
+
+    window.onload = () => {
+      img.src = characterImages[0];
+      typeText(characterDescriptions[0]);
+      prevImg.src = characterImages[characterImages.length - 1];
+      nextImg.src = characterImages[1];
+
+      const toggleBtn = document.getElementById('toggle-mode');
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        toggleBtn.textContent = '☀️';
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        toggleBtn.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      });
+    };
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const msgEl = document.getElementById('register-msg');
+
+      msgEl.textContent = '';
+      msgEl.className = 'message';
+
+      try {
+        const character = characterImages[index]; // <- aktiver Charakter
+
+const res = await fetch('http://localhost:3000/api/register', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ 
+    username, 
+    password, 
+    character // wird als z.B. "character3.gif" gesendet
+  })
+});
+
+
+        const data = await res.json();
+
+        if (data.success) {
+          msgEl.textContent = '✅ Registrierung erfolgreich! Weiterleitung...';
+          msgEl.classList.add('success');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
+        } else {
+          msgEl.textContent = data.error || '❌ Fehler bei der Registrierung';
+          msgEl.classList.add('error');
+        }
+      } catch (err) {
+        msgEl.textContent = '❌ Serverfehler';
+        msgEl.classList.add('error');
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

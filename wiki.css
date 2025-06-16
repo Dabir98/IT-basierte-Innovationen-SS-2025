@@ -1,0 +1,41 @@
+/* === Wiki-Seite (Kartenlayout) === */
+
+.wiki-container {
+    max-width: 1200px;
+    margin: 120px auto 40px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+  }
+  
+  .wiki-card {
+    background: #1f243b;
+    border: 2px solid #00ffcc;
+    border-radius: 12px;
+    width: 280px;
+    height: 180px;
+    padding: 20px;
+    box-shadow: 0 0 8px #00ffcc;
+    transition: transform 0.3s ease;
+  }
+  
+  .wiki-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .wiki-card h2 {
+    font-size: 12px;
+    margin-bottom: 12px;
+    color: #ffd500;
+    font-family: 'Press Start 2P', monospace;
+  }
+  
+  .wiki-card p {
+    font-size: 10px;
+    color: #ccc;
+    line-height: 1.4;
+    font-family: 'Press Start 2P', monospace;
+  }
+  

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodePilot – Video-Lernplattform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', monospace;
+      background-color: #121212;
+      background-image: url('dungeon.gif');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-image 0.5s ease, background-color 0.5s ease;
+       cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFklEQVRYR9WXURLDIAhE6/0PbSdOtUpcd1Gnpv1KGpTHBpCE1/cXq+vrMph7dGvXZTtpfW10DCA5jrH1H0Jhs5E0hnZdCR+vb5S8Nn8mQCeS9BdSalYJqMBjAGzq59xAESN7VFVUgV8AZB/dZBR7QTFDCqGquvUBVVoEtgIwpQRzmANSFHgWQKExHdIrPeuMvQNDarXe6nC/AutgV3JW+6bgqQLeV8FekRtgV+ToDKEKnACYKsfZjjkam7a0ZpYTytwmgainpC3HvwBocgKOxqRjehoR9DFKNFYtOwCGYCszobeCbl26N6yyQ6g8X/Wex/rBPsNEV6qAMaJPMynIHQCoSqS9JSMmwef51LflTgCRszU7DvAGiV6mHWfsaVUAAAAASUVORK5CYII=), auto;
+}
+ /* Hand-Cursor bei Hover über Buttons, Links, Popup-Buttons und Logout */
+button:hover,
+a:hover,
+.bg-popup-btn:hover,
+.logout-bottom-btn:hover,
+    
+    body.light-mode {
+      background-color: #f5f5f5;
+      background-image: url('dungeonday.gif');
+      color: #111;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      background-color: #0a0a23;
+      padding: 15px 30px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+      gap: 15px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .logo-img {
+      height: 50px;
+      width: auto;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 8px;
+    }
+
+    .navbar a:hover {
+      background: #ffd500;
+      border-radius: 5px;
+    }
+
+    .sign-up-btn {
+      background: #ffd500;
+      color: black;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 2px 2px 0 #000;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .toggle-mode-btn,
+    .sidebar-toggle {
+      background: none;
+      border: 1px solid #fff;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .sidebar-toggle {
+      font-size: 18px;
+    }
+
+    body.light-mode .navbar {
+      background-color: #fff;
+    }
+
+    body.light-mode .logo,
+    body.light-mode .navbar a {
+      color: #111;
+    }
+
+    body.light-mode .sign-up-btn {
+      background: #ffd500;
+      color: black;
+    }
+
+    body.light-mode .toggle-mode-btn,
+    body.light-mode .sidebar-toggle {
+      background-color: #fff;
+      border-color: #111;
+      color: #111;
+    }
+
+    .main-wrapper {
+      display: flex;
+      flex: 1;
+      margin-top: 100px;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #0a0a23;
+      padding: 100px 20px 20px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: -270px;
+      transition: left 0.3s ease;
+      z-index: 99;
+      overflow-y: auto;
+      font-family: 'Inter', sans-serif;
+      color: white;
+    }
+
+    body.light-mode .sidebar {
+      background-color: #ffffff;
+      color: #111;
+    }
+
+    .sidebar.show {
+      left: 0;
+    }
+
+.sidebar h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #ffd500;
+  color: #000;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 0 8px #ffd500;
+}
+
+body.light-mode .sidebar h2 {
+  background-color: #e7e7e7;
+  color: #000;
+  box-shadow: 0 0 8px #000
+}
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin: 10px 0;
+    }
+
+    .sidebar button {
+      background: none;
+      border: none;
+      text-align: left;
+      width: 100%;
+      font-size: 14px;
+      padding: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      color: inherit;
+    }
+
+    .sidebar button:hover {
+      background-color: #ffd500;
+      color: black;
+    }
+
+    .sidebar ul ul {
+      margin-left: 15px;
+    }
+
+    .dropdown-toggle {
+      font-weight: bold;
+    }
+
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1s ease;
+    }
+
+    .submenu.show {
+      max-height: 500px;
+    }
+
+    .main {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    iframe {
+      width: 80%;
+      max-width: 800px;
+      height: 450px;
+      border: none;
+      box-shadow: 0 0 12px #ffd500;
+      border-radius: 8px;
+      background-color: #000;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .sidebar {
+        top: 0;
+        height: 100%;
+      }
+    }
+
+    .sidebar .dropdown-toggle {
+      font-size: 15px;
+      font-weight: 700;
+      background-color: #1a1a40;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      width: 100%;
+      text-align: left;
+      color: #ffd500;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .sidebar .dropdown-toggle:hover {
+      background-color: #ffd500;
+      color: #000;
+    }
+
+    body.light-mode .sidebar .dropdown-toggle {
+      background-color: #e7e7e7;
+      color: #333;
+    }
+
+    body.light-mode .sidebar .dropdown-toggle:hover {
+      background-color: #ffd500;
+      color: #000;
+    }
+
+       /* Benutzeranzeige-Stile */
+    .user-fixed {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      z-index: 999;
+    }
+
+    .user-fixed img {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+    }
+
+    .user-fixed span {
+      font-size: 14px;
+      color: white;
+    }
+
+    .user-fixed button {
+      font-size: 10px;
+      font-family: 'Press Start 2P', monospace;
+      padding: 6px 10px;
+      background: #ffd500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    body.light-mode .user-fixed span {
+      color: #111;
+    }
+
+    body.light-mode .user-fixed button {
+      background: #ffd500;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔐 Login prüfen -->
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      alert("Bitte logge dich zuerst ein.");
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <!-- ✅ Navbar -->
+  <div class="navbar">
+    <div class="navbar-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" id="sidebarToggleBtn">☰</button>
+      <img src="rakete.png" alt="Logo" class="logo-img" />
+      <div class="logo">CodePilot</div>
+      <a href="seite1.html">Home</a>
+      <a href="index.html">AI</a>
+      <a href="seite2.html">Quiz</a>
+      <a href="wiki.html">Wiki</a>
+      <a href="konto.html">Konto</a>
+      <a href="#" class="sign-up-btn" id="loginStatusBtn">Sign up</a>
+      <button id="toggle-mode" class="toggle-mode-btn">🌙</button>
+    </div>
+  </div>
+
+    <div class="user-fixed" id="userFixed">
+    <img id="userAvatar" src="character1.gif" alt="Avatar" />
+    <span id="userName">Nutzername</span>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <!-- ✅ Inhalt -->
+  <div class="main-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <h2>Themen</h2>
+      <ul>
+        <li>
+          <button class="dropdown-toggle">Hello World</button>
+          <ul class="submenu">
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/dcPM1NrgIdA')">Hallo Welt</button></li>
+          </ul>
+        </li>
+        <li>
+          <button class="dropdown-toggle">Variablen</button>
+          <ul class="submenu">
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/rv_lmAy6-HE')">Variablen</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/o7uP27a67qI')">Primitive Datentypen</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/ovBJ8z03Cbc')">Die Klasse String</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/hsgyFzT384E')">Arithmetische Operatoren</button></li>
+          </ul>
+        </li>
+        <li>
+          <button class="dropdown-toggle">Kontrollfluss</button>
+          <ul class="submenu">
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/Twcm5eS3D2A')">If-Abfragen</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/HKz6KDjSllg')">Switch-Case Abfrage</button></li>
+          </ul>
+        </li>
+        <li>
+          <button class="dropdown-toggle">Schleifen</button>
+          <ul class="submenu">
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/7rCu9DzsVDA')">While-Schleife</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/F4oZqS8Qh6g')">Do-While-Schleife</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/iN1t2mavivo')">For-Schleife</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/v9CVZiFej0k')">Verschachtelte Schleifen</button></li>
+          </ul>
+        </li>
+        <li>
+          <button class="dropdown-toggle">Arrays</button>
+          <ul class="submenu">
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/I5LnmW-E_lc')">Arrays</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/RtdbGaBjbZA')">Foreach Schleifen</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/AvE1ohSKVCo')">Mehrdimensionale Arrays</button></li>
+          </ul>
+        </li>
+        <li>
+          <button class="dropdown-toggle">Methoden</button>
+          <ul class="submenu">
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/oBgC1XUQb2I')">Methoden</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/do4_kMoKW30')">Methoden mit Rückgabewert</button></li>
+          </ul>
+        </li>
+        <li>
+          <button class="dropdown-toggle">Klassen & Objekte</button>
+          <ul class="submenu">
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/fJkw0p2GgdM')">Objektorientierung</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/G6A6afnF7tM')">Klassen</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/Vwfze8l-zPc')">Methoden in Klassen</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/VjELK3OOpTE')">Eigenschaften/Attribute</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/uOjM9R5D1rw')">Konstruktor</button></li>
+          </ul>
+        </li>
+        <li>
+          <button class="dropdown-toggle">Vererbung</button>
+          <ul class="submenu">
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/lhEiCA98aVo')">Methoden überladen</button></li>
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/9RLY5bg31yI')">Vererbung</button></li>
+          </ul>
+        </li>
+        <li>
+          <button class="dropdown-toggle">Exception Handling</button>
+          <ul class="submenu">
+            <li><button onclick="loadVideo('https://www.youtube.com/embed/O1yJ9wvlviA')">Exception Handling</button></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Videoanzeige -->
+    <div class="main">
+      <iframe id="video-frame" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- ✅ JavaScript -->
+  <script>
+   function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      const isOpen = sidebar.classList.toggle('show');
+      toggleBtn.textContent = isOpen ? '✖' : '☰';
+    }
+
+    function loadVideo(url) {
+      document.getElementById('video-frame').src = url + '?autoplay=1';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('toggle-mode');
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        toggleBtn.textContent = '☀️';
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        const isLight = document.body.classList.toggle('light-mode');
+        toggleBtn.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      });
+
+      const loginBtn = document.getElementById('loginStatusBtn');
+      const userBox = document.getElementById('userFixed');
+
+      if (user && loginBtn && userBox) {
+        loginBtn.textContent = "Logged In";
+        loginBtn.style.pointerEvents = "none";
+        loginBtn.style.backgroundColor = "#ffd500";
+        loginBtn.style.color = "#000";
+
+        userBox.style.display = "flex";
+        document.getElementById('userName').textContent = user.username;
+        document.getElementById('userAvatar').src = user.character || "character1.gif";
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem('user');
+          window.location.href = "login.html";
+        });
+      }
+
+      document.querySelectorAll('.dropdown-toggle').forEach(button => {
+        button.addEventListener('click', () => {
+          const submenu = button.nextElementSibling;
+          submenu.classList.toggle('show');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

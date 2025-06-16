@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodePilot – Java & Python Kurse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style1.css">
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+    }
+
+    .loader-overlay {
+      position: fixed;
+      z-index: 9999;
+      background: black;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .coin {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+      animation: jump 0.8s infinite ease-in-out;
+    }
+
+    @keyframes jump {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-40px); }
+      100% { transform: translateY(0); }
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 12px;
+      color: gold;
+      text-shadow: 1px 1px 0 #000;
+    }
+
+    #game-container {
+      width: 1200px;
+      height: 800px;
+      margin: 40px auto;
+      overflow: hidden;
+      position: relative;
+      border: 4px solid gold;
+      background: #222;
+    }
+    #map {
+  min-width: 100%;
+  min-height: 100%;
+      position: relative;
+      background-image: url('map.png');
+      background-size: cover;
+      image-rendering: pixelated;
+    }
+
+    #character {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+      z-index: 2;
+    }
+
+    #char-test {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      display: none;
+      z-index: 1;
+    }
+
+    .portal, .wall {
+      position: absolute;
+      z-index: 1;
+    }
+
+    .portal {
+      width: 64px;
+      height: 64px;
+      background-color: rgba(255, 255, 0, 0.3);
+      border: 2px dashed gold;
+    }
+
+    .wall {
+      background-color: rgba(255, 0, 0, 0.4); /* sichtbar zu Testzwecken */
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #111;
+      padding: 10px;
+      z-index: 1000;
+      color: white;
+      font-family: 'Press Start 2P', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login prüfen -->
+<script>
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    alert("Bitte logge dich zuerst ein.");
+    window.location.href = "login.html";
+  }
+</script>
+
+<!-- Navigation -->
+<div class="navbar">
+  <div class="logo">
+    <img src="rakete.png" alt="Logo" style="height: 32px; vertical-align: middle;" />
+    CodePilot
+  </div>
+</div>
+
+<!-- Spielbereich -->
+<div id="game-container">
+  <div id="map">
+    <div class="portal" id="quizPortal" style="top: 630px; left: 640px;"></div>
+    <div class="wall" style="top: 600px; left: 400px; width: 64px; height: 64px;"></div>
+  </div>
+  <img id="character" src="" alt="Charakter">
+  <div id="char-test"></div>
+</div>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const char = document.getElementById('character');
+  const map = document.getElementById('map');
+  const ghost = document.getElementById('char-test');
+  const portal = document.getElementById('quizPortal');
+  const walls = Array.from(document.querySelectorAll('.wall'));
+
+  // Map-Größe automatisch setzen
+  const mapImage = new Image();
+  mapImage.src = 'map.png';
+  mapImage.onload = () => {
+    map.style.width = mapImage.width + 'px';
+    map.style.height = mapImage.height + 'px';
+  };
+
+  // Charakterbild setzen
+  const user = JSON.parse(localStorage.getItem('user'));
+  char.src = user?.character || 'character1.gif';
+
+  // Startposition
+  let posX = 160;
+  let posY = 300;
+  const speed = 10;
+
+  function isColliding(a, b) {
+    return (
+      a.offsetLeft < b.offsetLeft + b.offsetWidth &&
+      a.offsetLeft + a.offsetWidth > b.offsetLeft &&
+      a.offsetTop < b.offsetTop + b.offsetHeight &&
+      a.offsetTop + a.offsetHeight > b.offsetTop
+    );
+  }
+
+  function isBlocked(newX, newY) {
+    ghost.style.left = newX + 'px';
+    ghost.style.top = newY + 'px';
+    ghost.style.display = 'block';
+
+    const blocked = walls.some(wall => isColliding(ghost, wall));
+
+    ghost.style.display = 'none';
+    return blocked;
+  }
+
+  function updatePosition() {
+    char.style.left = posX + 'px';
+    char.style.top = posY + 'px';
+
+    if (isColliding(char, portal)) {
+      alert("Quiz-Haus betreten!");
+      // window.location.href = 'seite2.html';
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    let newX = posX;
+    let newY = posY;
+
+    if (e.key === 'ArrowUp') newY = Math.max(0, posY - speed);
+    if (e.key === 'ArrowDown') newY = posY + speed;
+    if (e.key === 'ArrowLeft') newX = Math.max(0, posX - speed);
+    if (e.key === 'ArrowRight') newX = posX + speed;
+
+    if (!isBlocked(newX, newY)) {
+      posX = newX;
+      posY = newY;
+      updatePosition();
+    }
+  });
+
+  updatePosition();
+});
+</script>
+
+<!-- Ladebildschirm -->
+<script src="loader.js"></script>
+<div id="loader" class="loader-overlay">
+  <div class="loader-content">
+    <img src="coin.png.png" alt="Münze" class="coin" />
+    <p class="loading-text">LÄDT...</p>
+  </div>
+</div>
+
+</body>
+</html>

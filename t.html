@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodePilot – Java Kurs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style2.css">
+  <style>
+ 
+
+/* Cursor für Quiz-Elemente */
+input[type="radio"]:hover,
+input[type="checkbox"]:hover,
+label:hover,
+select:hover,
+.quiz-btn:hover {
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
+}
+.loader-overlay {
+  position: fixed;
+  z-index: 9999;
+  background: black;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.coin {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  animation: jump 0.8s infinite ease-in-out;
+}
+
+@keyframes jump {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-40px); }
+  100% { transform: translateY(0); }
+}
+
+.loading-text {
+  margin-top: 20px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  color: gold;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Fortschritts-Text */
+.progress-text small {
+  font-size: 9px;
+}
+
+    .user-fixed {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 999;
+    }
+
+    .user-fixed img {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+    }
+
+    .user-fixed span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: white;
+    }
+
+    .user-fixed button {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 6px 10px;
+      background: #ffd500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    body.light-mode .user-fixed span {
+      color: black;
+    }
+    .loader-overlay {
+  position: fixed;
+  z-index: 9999;
+  background: black;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.coin {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  animation: jump 0.8s infinite ease-in-out;
+}
+
+@keyframes jump {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-40px); }
+  100% { transform: translateY(0); }
+}
+
+.loading-text {
+  margin-top: 20px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  color: gold;
+  text-shadow: 1px 1px 0 #000;
+}
+
+  </style>
+</head>
+<body>
+
+<!-- 🔐 Login-Schutz -->
+<script>
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    alert("Bitte logge dich zuerst ein.");
+    window.location.href = "login.html";
+  }
+</script>
+
+<!-- Navigation -->
+<div class="navbar">
+  <div class="navbar-left">
+    <div class="logo">
+      <img src="rakete.png" alt="Logo" />
+      CodePilot
+    </div>
+    <a href="#" onclick="navigateWithLoader('seite1.html')">Home</a>
+    <a href="#" onclick="navigateWithLoader('index.html')">AI</a>
+<a href="#" onclick="navigateWithLoader('seite2.html')"class="active">Quiz</a>
+<a href="#" onclick="navigateWithLoader('wiki.html')" >Wiki</a>
+<a href="#" onclick="navigateWithLoader('konto.html')">Konto</a>
+    <a href="#" class="sign-up-btn" id="loginStatusBtn">Sign up</a>
+    <button id="toggle-mode" class="toggle-mode-btn">🌙</button>
+  </div>
+</div>
+
+<!-- Benutzeranzeige oben rechts -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const loginBtn = document.getElementById('loginStatusBtn');
+
+    if (user && loginBtn) {
+      loginBtn.textContent = "Logged In";
+      loginBtn.style.pointerEvents = "none";
+      loginBtn.style.backgroundColor = "#ffd500";
+      loginBtn.style.color = "#000";
+    }
+
+    if (user) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "user-fixed";
+
+      const avatar = document.createElement("img");
+      avatar.src = user.character || "character1.gif";
+
+      const name = document.createElement("span");
+      name.textContent = user.username;
+
+      const logout = document.createElement("button");
+      logout.textContent = "Logout";
+      logout.onclick = () => {
+        localStorage.removeItem("user");
+        window.location.href = "login.html";
+      };
+
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(name);
+      wrapper.appendChild(logout);
+      document.body.appendChild(wrapper);
+    }
+  });
+ 
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) return;
+
+    try {
+      const res = await fetch("http://localhost:3000/api/get-user-stats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: user.username })
+      });
+
+      const data = await res.json();
+
+      const setBar = (fillId, labelId, value, total) => {
+        const percent = Math.min(100, Math.round((value / total) * 100));
+        document.getElementById(fillId).style.width = percent + "%";
+        document.getElementById(labelId).textContent = value;
+      };
+
+      setBar("exercise-fill", "exercise-label", data.exercises, 40);
+      setBar("xp-fill", "xp-label", data.xp, 685);
+      setBar("badge-fill", "badge-label", data.badges, 30);
+      setBar("streak-fill", "streak-label", data.streak, 7); // 7 für Wochenstreak o. Ä.
+
+    } catch (err) {
+      console.error("Fehler beim Laden des Fortschritts:", err);
+    }
+  });
+</script>
+
+
+<!-- Hero -->
+<div class="hero-background">
+  <h1>Java</h1>
+  <p>Lerne Java und beherrsche objektorientierte Programmierung sowie wichtige Datenstrukturen für effiziente Anwendungen</p>
+  <button class="cta-button">Kostenlos Lernen</button>
+</div>
+
+<!-- Kurs Navigation -->
+<div class="content-section">
+  <div class="sidebar" id="sidebar"></div>
+
+<div class="side-panel">
+  <div class="info-box progress-box">
+    <h2>Dein Fortschritt</h2>
+
+    <div class="progress-entry blue">
+      <img src="buch.png" alt="Übungen">
+      <div class="progress-text">
+        <div>ÜBUNGEN</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="exercise-fill"></div>
+        </div>
+        <small id="exercise-label">0</small>
+      </div>
+    </div>
+
+    <div class="progress-entry red">
+      <img src="stern.png" alt="XP">
+      <div class="progress-text">
+        <div>GESAMT-XP</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="xp-fill"></div>
+        </div>
+        <small id="xp-label">0</small>
+      </div>
+    </div>
+
+    <div class="progress-entry green">
+      <img src="abzeichen.png" alt="Abzeichen">
+      <div class="progress-text">
+        <div>Kursabzeichen</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="badge-fill"></div>
+        </div>
+        <small id="badge-label">0</small>
+      </div>
+    </div>
+
+    <div class="progress-entry purple">
+      <img src="feuer.png" alt="Streak">
+      <div class="progress-text">
+        <div>TÄGLICHE STREIFEN</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="streak-fill"></div>
+          </div>
+          </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- JavaScript -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.getElementById('toggle-mode');
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-mode');
+      toggleBtn.textContent = '☀️';
+    }
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      toggleBtn.textContent = isLight ? '☀️' : '🌙';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
+
+    const sections = [
+      'Hello World', 'Variablen', 'Kontrollfluss', 'Schleifen',
+      'Vererbung', 'Arrays', 'Methoden', 'Klassen und Objekte','Exception Handling'
+    ];
+    const sidebar = document.getElementById('sidebar');
+
+    sections.forEach((title, i) => {
+      const section = document.createElement('div');
+      section.className = 'section';
+
+      const header = document.createElement('div');
+      header.className = 'section-header';
+      const circle = document.createElement('div');
+      circle.className = 'circle-number';
+      circle.textContent = i + 1;
+      header.appendChild(circle);
+      header.appendChild(document.createTextNode(' ' + title));
+      section.appendChild(header);
+
+      const list = document.createElement('div');
+      list.className = 'exercise-list';
+
+      for (let j = 1; j <= 5; j++) {
+        const exercise = document.createElement('div');
+        exercise.className = 'exercise';
+
+        const span = document.createElement('span');
+        span.textContent = `Übung ${j}`;
+
+        const button = document.createElement('button');
+        button.className = 'start-btn';
+        button.textContent = 'Start';
+        button.onclick = () => {
+  const zielseite = `quiz${i + 1}.${j}.html`;
+  window.location.href = `test.html?ziel=${zielseite}`;
+};
+
+
+
+        exercise.appendChild(span);
+        exercise.appendChild(button);
+        list.appendChild(exercise);
+      }
+
+      section.appendChild(list);
+      sidebar.appendChild(section);
+    });
+
+    // Toggle Sidebar Sections
+    document.querySelectorAll('.section-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const list = header.nextElementSibling;
+        document.querySelectorAll('.exercise-list').forEach(el => {
+          if (el !== list) el.classList.remove('open');
+        });
+        if (list && list.classList.contains('exercise-list')) {
+          list.classList.toggle('open');
+        }
+      });
+    });
+  });
+</script>
+<script src="loader.js"></script>
+<div id="loader" class="loader-overlay">
+  <div class="loader-content">
+    <img src="coin.png.png" alt="Münze" class="coin" />
+    <p class="loading-text">LÄDT...</p>
+  </div>
+</div>
+<div style="height: 150px;"></div>
+
+</body>
+</html>
