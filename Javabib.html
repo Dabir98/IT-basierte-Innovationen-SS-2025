@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Java-Wiki mit Navigation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+
+button:hover,
+a:hover,
+.bg-popup-btn:hover,
+.logout-bottom-btn:hover {
+    cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
+  }
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', monospace;
+      background-color: #0a0a23;
+      color: white;
+      transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+     cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFklEQVRYR9WXURLDIAhE6/0PbSdOtUpcd1Gnpv1KGpTHBpCE1/cXq+vrMph7dGvXZTtpfW10DCA5jrH1H0Jhs5E0hnZdCR+vb5S8Nn8mQCeS9BdSalYJqMBjAGzq59xAESN7VFVUgV8AZB/dZBR7QTFDCqGquvUBVVoEtgIwpQRzmANSFHgWQKExHdIrPeuMvQNDarXe6nC/AutgV3JW+6bgqQLeV8FekRtgV+ToDKEKnACYKsfZjjkam7a0ZpYTytwmgainpC3HvwBocgKOxqRjehoR9DFKNFYtOwCGYCszobeCbl26N6yyQ6g8X/Wex/rBPsNEV6qAMaJPMynIHQCoSqS9JSMmwef51LflTgCRszU7DvAGiV6mHWfsaVUAAAAASUVORK5CYII=), auto;
+}
+
+    body.light-mode {
+      background-color: #ffffff;
+      color: #111;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #0a0a23;
+      padding: 15px 40px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+    }
+
+    body.light-mode .navbar {
+      background-color: #ffffff;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .logo img {
+      height: 50px;
+    }
+
+    .navbar a {
+      font-family: Arial, sans-serif;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 8px;
+      transition: background 0.3s;
+    }
+
+    .navbar a:hover {
+      background: #ffd500;
+      border-radius: 5px;
+    }
+
+    body.light-mode .navbar a,
+    body.light-mode .logo {
+      color: #111;
+    }
+
+    .sign-up-btn {
+      background: #ffd500;
+      color: black;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 2px 2px 0 #000;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .toggle-mode-btn {
+      background: none;
+      border: 1px solid #fff;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    body.light-mode .toggle-mode-btn {
+      border-color: #111;
+      color: #111;
+    }
+
+    .user-fixed {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 999;
+      display: none;
+    }
+
+    .user-fixed img {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+    }
+
+    .user-fixed span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: white;
+    }
+
+    body.light-mode .user-fixed span {
+      color: black;
+    }
+
+    .user-fixed button {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 6px 10px;
+      background: #ffd500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      margin-top: 60px;
+      padding: 20px;
+      background-color: #11172b;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    body.light-mode .container {
+      background-color: #f9f9f9;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .header-bar .title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-bar h1 {
+      font-size: 25px;
+      margin: 0;
+    }
+
+    .underline {
+      width: 100%;
+      max-width: 1100px;
+      height: 2px;
+      background-color: #243974;
+      margin: 0 auto 20px auto;
+      border-radius: 2px;
+      opacity: 0.8;
+    }
+    
+    body.light-mode .underline {
+      background-color: #bbb; /* grau für light mode */
+    }
+
+    .header-bar select {
+      font-family: inherit;
+      font-size: 12px;
+      background-color: #009dff;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #006bb3; /* Tiefe erzeugen */
+      transition: all 0.2s ease;
+    }
+
+    .header-bar select:hover {
+      background-color: #00bfff;
+    }
+
+    .header-bar select:active {
+      transform: translateY(5px);
+      box-shadow: 0 2px 0 #006bb3;
+    }
+
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 0 20px 30px 20px;
+    }
+
+    .card {
+      background-color: #1a223f;
+      border-radius: 12px;
+      border: 1px solid #243974;
+      overflow: hidden;
+      position: relative;
+      padding-bottom: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
+      color: white;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      border-color: #00bfff;
+    }
+
+        .card:active {
+      transform: translateY(5px);
+      box-shadow: 0 2px 0 #006bb3;
+    }
+
+    body.light-mode .card {
+      background-color: #f2f2f2;
+      color: #111;
+      border: 1px solid #ccc;
+    }
+
+    body.light-mode .card:hover {
+      border-color: #009dff;
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card .info {
+      padding: 15px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    body.light-mode .card .info {
+      color: #111;
+    }
+
+    #card-detail {
+      display: none;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    #card-detail h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    #card-detail button {
+      font-family: 'Press Start 2P', monospace;
+      padding: 10px;
+      margin-top: 20px;
+      background: #ffd500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+      .array-content {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #eee;
+  }
+
+  .array-content h3 {
+    color: #ffd500;
+    margin-top: 0;
+  }
+
+  .array-content strong {
+    color: #00bfff;
+  }
+
+  .array-content code {
+    background-color: #222;
+    color: #ffd500;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: Consolas, monospace;
+    font-size: 14px;
+  }
+
+  .array-content pre {
+    background-color: #1a1a2a;
+    padding: 10px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 15px;
+    color: #ffd500;
+  }
+
+  .array-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .array-content th,
+  .array-content td {
+    border: 1px solid #444;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .array-content th {
+    background-color: #243974;
+    color: #fff;
+  }
+
+  .array-content ul {
+    padding-left: 20px;
+    margin-top: 0;
+  }
+
+  .array-content li {
+    margin-bottom: 6px;
+  }
+
+  body.light-mode .array-content {
+  color: #111;
+}
+
+body.light-mode .array-content code {
+  background-color: #eee;
+  color: #000;
+}
+
+body.light-mode .array-content pre {
+  background-color: #e0e0e0;
+  color: #000;
+}
+
+body.light-mode .array-content table,
+body.light-mode .array-content th,
+body.light-mode .array-content td {
+  border-color: #999;
+}
+
+body.light-mode .array-content th {
+  background-color: #ccc;
+  color: #111;
+}
+
+#card-detail button {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 15px;
+  background-color: #009dff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #006bb3; /* Tiefe erzeugen */
+  transition: all 0.2s ease;
+}
+
+#card-detail button:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 #000;
+  background-color: #00bfff;
+}
+
+#card-detail button:active {
+  transform: translateY(5px);
+  box-shadow: 0 2px 0 #006bb3;
+}
+ 
+.subtitle {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  margin-top: 6px;
+  color: white;
+  margin-top: 15px;
+}
+
+body.light-mode .subtitle {
+  color: #111;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('wikiday.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  z-index: -1;
+  opacity: 0.3; /* Optional für Transparenz */
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="navbar-left">
+    <div class="logo">
+      <img src="rakete.png" alt="Logo" />
+      CodePilot
+    </div>
+    <a href="seite1.html">Home</a>
+    <a href="index.html">AI</a>
+    <a href="seite2.html">Quiz</a>
+    <a href="wiki.html">Wiki</a>
+    <a href="konto.html">Konto</a>
+    <a href="#" class="sign-up-btn" id="loginStatusBtn">Sign up</a>
+    <button id="toggle-mode" class="toggle-mode-btn">🌙</button>
+  </div>
+</div>
+
+<div class="user-fixed" id="userFixed">
+  <img id="userAvatar" src="character1.gif" alt="Avatar" />
+  <span id="userName">Nutzername</span>
+  <button id="logoutBtn">Logout</button>
+</div>
+
+<div class="container">
+  <div class="header-bar">
+<div class="title-group">
+  <img src="rocketstart.gif" alt="Java-GIF" style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;" />
+  <div class="title-text">
+    <h1>Java-Wiki</h1>
+    <p class="subtitle">public class JavaWiki extends CodePilot {}</p>
+  </div>
+</div>
+    <select id="sort-select">
+      <option value="recent">Zuletzt aufgerufen</option>
+      <option value="alphabetical">Alphabetisch</option>
+    </select>
+  </div>
+
+  <div class="underline"></div>
+
+  <div class="projects" id="project-container">
+    <div class="card" data-title="Hello World"><img src="helloworld.png"><div class="info"><strong>Hello World</strong></div></div>
+    <div class="card" data-title="Variablen"><img src="variablen.png"><div class="info"><strong>Variablen</strong></div></div>
+    <div class="card" data-title="Kontrollfluss"><img src="Kontrollfluss.png"><div class="info"><strong>Kontrollfluss</strong></div></div>
+    <div class="card" data-title="Schleifen"><img src="schleifen.png"><div class="info"><strong>Schleifen</strong></div></div>
+    <div class="card" data-title="Exception Handling"><img src="exceptionhandling.png"><div class="info"><strong>Exception Handling</strong></div></div>
+    <div class="card" data-title="Arrays"><img src="arrays.png"><div class="info"><strong>Arrays</strong></div></div>
+    <div class="card" data-title="Methoden"><img src="methoden.png"><div class="info"><strong>Methoden</strong></div></div>
+    <div class="card" data-title="Klassen und Objekte"><img src="klassenobjekte.png"><div class="info"><strong>Klassen und Objekte</strong></div></div>
+    <div class="card" data-title="Vererbung"><img src="vererbung.png"><div class="info"><strong>Vererbung</strong></div></div>
+  </div>
+
+  <div id="card-detail"></div>
+</div>
+
+<!-- Dein HTML-Code bleibt unverändert bis zum <script> -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('toggle-mode');
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-mode');
+      toggleBtn.textContent = '☀️';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      toggleBtn.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+      localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    });
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const loginBtn = document.getElementById('loginStatusBtn');
+    const userBox = document.getElementById('userFixed');
+
+    if (user && loginBtn && userBox) {
+      loginBtn.textContent = "Logged In";
+      loginBtn.style.pointerEvents = "none";
+      loginBtn.style.backgroundColor = "#ffd500";
+      loginBtn.style.color = "#000";
+
+      userBox.style.display = "flex";
+      document.getElementById('userName').textContent = user.username;
+      document.getElementById('userAvatar').src = user.character || "character1.gif";
+
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('user');
+        window.location.href = "login.html";
+      });
+    }
+
+    const cardDetails = {
+      "Hello World": `
+<div class="array-content">
+  <h3>👋 Hello World – Der Einstieg in Java</h3>
+  <p>Der erste Schritt in jeder Programmiersprache ist traditionell ein kleines Programm, das den Text <code>"Hello World!"</code> auf der Konsole ausgibt. Auch in Java ist dies der perfekte Einstieg.</p>
+
+  <hr>
+
+  <h4>🛠 Erstellen des Projekts in Eclipse</h4>
+  <ol>
+    <li><strong>Projekt anlegen:</strong><br>
+      • File > New > Java Project<br>
+      • Name z. B.: <code>HelloWorld</code><br>
+      • Haken bei <code>Create module-info.java</code> entfernen<br>
+      • → Finish
+    </li>
+    <li><strong>Package erstellen:</strong><br>
+      • Rechtsklick auf <code>src</code> → New > Package<br>
+      • Name z. B.: <code>start</code> (klein schreiben!)
+    </li>
+    <li><strong>Klasse anlegen:</strong><br>
+      • Rechtsklick auf das Package → New > Class<br>
+      • Name: <code>Hello_World</code><br>
+      • Haken setzen bei <code>public static void main(String[] args)</code><br>
+      • → Finish
+    </li>
+  </ol>
+
+  <hr>
+
+  <h4>📄 Generierter Code</h4>
+  <pre><code>package start;
+
+public class Hello_World {
+  public static void main(String[] args) {
+    System.out.println("Hello World!");
+  }
+}</code></pre>
+
+  <hr>
+
+  <h4>📌 Erklärung</h4>
+  <table>
+    <tr><th>Teil</th><th>Funktion</th></tr>
+    <tr><td><code>public class Hello_World</code></td><td>definiert eine neue Klasse</td></tr>
+    <tr><td><code>main(String[] args)</code></td><td>Startpunkt des Programms</td></tr>
+    <tr><td><code>System.out.println(...)</code></td><td>gibt Text in neuer Zeile auf der Konsole aus</td></tr>
+    <tr><td><code>;</code></td><td>jede Anweisung endet mit einem Semikolon</td></tr>
+  </table>
+
+  <hr>
+
+  <h4>💬 Kommentare</h4>
+  <pre><code>// einzeiliger Kommentar
+
+/*
+ * mehrzeiliger Kommentar
+ */</code></pre>
+  <p>📌 Kommentare werden vom Compiler ignoriert, helfen aber dir und anderen beim Verstehen des Codes.</p>
+
+  <hr>
+
+  <h4>⚙️ Kompilieren & Ausführen</h4>
+  <p><strong>🖥 Manuell (Konsole):</strong></p>
+  <ol>
+    <li>Datei speichern als <code>Hello_World.java</code></li>
+    <li>Kompilieren: <code>javac Hello_World.java</code></li>
+    <li>Ausführen: <code>java Hello_World</code></li>
+  </ol>
+
+  <p><strong>🟢 In Eclipse:</strong></p>
+  <ul>
+    <li>Einfach den grünen Play-Button drücken</li>
+    <li>Ausgabe erscheint im unteren Bereich in der Konsole:</li>
+    <li><code>Hello World!</code></li>
+  </ul>
+
+  <hr>
+
+  <h4>✅ Zusammenfassung: Hello World</h4>
+  <table>
+    <tr><th>Schritt</th><th>Was du tust</th></tr>
+    <tr><td>Java-Projekt anlegen</td><td>über File > New > Java Project</td></tr>
+    <tr><td>Package & Klasse erstellen</td><td>im <code>src</code>-Verzeichnis</td></tr>
+    <tr><td>main-Methode nutzen</td><td>Startpunkt des Programms</td></tr>
+    <tr><td><code>System.out.println(...)</code></td><td>gibt Text aus</td></tr>
+    <tr><td>Play-Button drücken</td><td>Programm wird ausgeführt</td></tr>
+  </table>
+</div>
+`,
+
+      "Variablen": `
+<div class="array-content">
+  <h3>📦 Variablen</h3>
+  <p>Programme müssen Daten speichern und verarbeiten – dafür nutzt Java <strong>Variablen</strong>. Eine Variable verweist auf einen bestimmten Speicherplatz und hilft, Daten logisch und effizient zu verwalten.</p>
+
+  <hr>
+
+  <h4>🧱 Datentypen</h4>
+  <p>Java kennt 8 primitive Datentypen (nicht objektorientiert):</p>
+  <table>
+    <tr><th>Datentyp</th><th>Speicher</th><th>Wertebereich</th></tr>
+    <tr><td>byte</td><td>8 bit</td><td>-128 bis 127</td></tr>
+    <tr><td>short</td><td>16 bit</td><td>-32.768 bis 32.767</td></tr>
+    <tr><td>int</td><td>32 bit</td><td>-2.147.483.648 bis 2.147.483.647</td></tr>
+    <tr><td>long</td><td>64 bit</td><td>±9.2×10¹⁸</td></tr>
+    <tr><td>float</td><td>32 bit</td><td>ca. ±3.4×10³⁸</td></tr>
+    <tr><td>double</td><td>64 bit</td><td>ca. ±1.8×10³⁰⁸</td></tr>
+    <tr><td>char</td><td>16 bit</td><td>Unicode-Zeichen</td></tr>
+    <tr><td>boolean</td><td>8 bit</td><td>true / false</td></tr>
+  </table>
+  <p><strong>Typische Anwendung:</strong></p>
+  <ul>
+    <li><code>int</code> → ganze Zahlen</li>
+    <li><code>double</code> → Fließkommazahlen</li>
+  </ul>
+
+  <hr>
+
+  <h4>✍️ Deklaration & Initialisierung</h4>
+  <p><strong>Variante 1 – getrennt:</strong></p>
+  <pre><code>int x;     // Deklaration
+x = 10;    // Initialisierung</code></pre>
+
+  <p><strong>Variante 2 – kombiniert:</strong></p>
+  <pre><code>int y = 10;</code></pre>
+
+  <p><strong>Benennung:</strong></p>
+  <ul>
+    <li>Englisch</li>
+    <li>Klein anfangen: <code>userAge</code>, <code>maxSpeed</code></li>
+    <li>CamelCase-Style</li>
+  </ul>
+
+  <hr>
+
+  <h4>🔒 Gültigkeit (Scope)</h4>
+
+  <h5>🔹 Lokale Variablen</h5>
+  <p>Nur im jeweiligen Code-Block gültig:</p>
+  <pre><code>{
+  int a = 5;
+  {
+    int b = 2;
+  }
+  // b nicht mehr sichtbar
+}</code></pre>
+
+  <h5>🔹 Instanzvariablen</h5>
+  <p>Innerhalb einer Klasse definiert, sichtbar für Methoden:</p>
+  <pre><code>class Demo {
+  private int score = 10;
+}</code></pre>
+
+  <p><strong>Zugriffsmodifikatoren:</strong></p>
+  <table>
+    <tr><th>Modifikator</th><th>Bedeutung</th></tr>
+    <tr><td>private</td><td>nur in der eigenen Klasse sichtbar</td></tr>
+    <tr><td>(kein)</td><td>im selben Paket sichtbar</td></tr>
+    <tr><td>protected</td><td>im Paket + erbende Klassen</td></tr>
+    <tr><td>public</td><td>überall zugänglich</td></tr>
+  </table>
+
+  <h5>🔹 Statische Variablen</h5>
+  <p>Gemeinsam für alle Objekte einer Klasse:</p>
+  <pre><code>class Counter {
+  static int count = 0;
+}
+
+System.out.println(Counter.count);</code></pre>
+
+  <hr>
+
+  <h4>➗ Mathematische Operatoren</h4>
+  <pre><code>int a = 7;
+int b = 3;
+int c;
+
+c = a + b;  // 10
+c = a - b;  // 4
+c = a * b;  // 21
+c = a / b;  // 2 (Ganzzahldivision)
+c = a % b;  // 1 (Rest)
+
+// Mit Gleitkommazahlen
+double d = 7.0 / 3.0;  // 2.3333...
+</code></pre>
+
+  <p><strong>Kurzschreibweise:</strong></p>
+  <pre><code>a += 3;    // a = a + 3;
+a++;       // a = a + 1;
+--a;       // a = a - 1;</code></pre>
+
+  <p><strong>Vorher-/Nachher-Inkrement:</strong></p>
+  <pre><code>int x = 1;
+System.out.print(x++);  // 1
+System.out.print(x);    // 2
+
+int y = 1;
+System.out.print(++y);  // 2
+System.out.print(y);    // 2</code></pre>
+
+  <hr>
+
+  <h4>🤔 Logische Operatoren</h4>
+  <table>
+    <tr><th>Operator</th><th>Bedeutung</th></tr>
+    <tr><td>==</td><td>gleich</td></tr>
+    <tr><td>!=</td><td>ungleich</td></tr>
+    <tr><td>></td><td>größer</td></tr>
+    <tr><td><</td><td>kleiner</td></tr>
+    <tr><td>>=</td><td>größer gleich</td></tr>
+    <tr><td><=</td><td>kleiner gleich</td></tr>
+  </table>
+
+  <p><strong>Verknüpfungen:</strong></p>
+  <table>
+    <tr><th>Operator</th><th>Bedeutung</th></tr>
+    <tr><td>&&</td><td>UND</td></tr>
+    <tr><td>||</td><td>ODER</td></tr>
+    <tr><td>!</td><td>NICHT</td></tr>
+    <tr><td>^</td><td>XOR (entweder/oder)</td></tr>
+  </table>
+
+  <p><strong>Beispiel mit Booleans:</strong></p>
+  <pre><code>boolean a = true;
+boolean b = false;
+
+System.out.println(a && b);  // false
+System.out.println(a || b);  // true
+System.out.println(!a);      // false
+System.out.println(a ^ b);   // true</code></pre>
+</div>
+`,
+
+      "Kontrollfluss": `
+<div class="array-content">
+  <h3>🔀 Kontrollfluss</h3>
+  <p>Kontrollstrukturen steuern den Ablauf eines Programms: Welche Anweisungen ausgeführt, übersprungen oder abhängig von Bedingungen entschieden werden. Der Kontrollfluss gliedert sich vor allem in:</p>
+  <ul>
+    <li><code>if</code>-Abfragen</li>
+    <li><code>if-else</code>-Abfolgen</li>
+    <li><code>switch-case</code>-Verzweigungen</li>
+  </ul>
+
+  <hr>
+
+  <h4>✅ If-Abfragen</h4>
+  <p>Mit einer <code>if</code>-Abfrage wird Code nur dann ausgeführt, wenn eine Bedingung <code>true</code> ist:</p>
+  <pre><code>if(a < 5) {
+  // wird nur ausgeführt, wenn a kleiner als 5 ist
+}</code></pre>
+
+  <p><strong>Beispiele:</strong></p>
+  <pre><code>if(true) {
+  // wird immer ausgeführt
+}
+
+int a = 2;
+if(a < 5) {
+  // wird ausgeführt
+}
+
+if(a < 5 && b >= 8) {
+  // wird nur bei beiden Bedingungen true ausgeführt
+}
+
+char c = 'a';
+if(c == 'A') {
+  // wird NICHT ausgeführt (Groß-/Kleinschreibung!)
+}</code></pre>
+
+  <hr>
+
+  <h4>🧭 If-else-Abfolgen</h4>
+  <p>Ermöglichen das Ausführen von Alternativen:</p>
+  <pre><code>if(a == 2 && b == 3) {
+  // Code 1
+} else if(a == 2 || b == 3) {
+  // Code 2
+} else {
+  // Code 3
+}
+System.out.println("End of program");</code></pre>
+
+  <p>⚠️ <strong>Reihenfolge wichtig:</strong> Bedingungen werden von oben nach unten geprüft. Sobald eine zutrifft, wird der Rest übersprungen!</p>
+  <pre><code>if(a < 10) {
+  // wird immer ausgeführt, auch wenn a == 8
+} else if(a == 8) {
+  // wird NIE erreicht!
+}</code></pre>
+
+  <hr>
+
+  <h4>🧮 Kurzschreibweise (Ternärer Operator)</h4>
+  <p>Für einfache Zuweisungen:</p>
+  <pre><code>int a = 3;
+int b = (a == 3 ? 4 : 6); // ergibt 4</code></pre>
+  <p><strong>Syntax:</strong></p>
+  <pre><code>Bedingung ? WertWennTrue : WertWennFalse</code></pre>
+
+  <hr>
+
+  <h4>🧱 Switch-case-Verzweigung</h4>
+  <p>Eine Alternative zu langen <code>if-else</code>-Ketten – <strong>nur bei Vergleich auf konkrete Werte</strong> (keine logischen Bedingungen!):</p>
+  <pre><code>int x = 2;
+
+switch(x) {
+  case 1:
+    // wird nicht ausgeführt
+    break;
+  case 2:
+    // wird ausgeführt
+    break;
+  default:
+    // wenn kein Fall zutrifft
+    break;
+}</code></pre>
+
+  <p><strong>Mehrere Fälle kombinieren:</strong></p>
+  <pre><code>int x = 16;
+
+switch(x) {
+  case 1:
+  case 16:
+  case 26:
+    // wird bei allen drei Werten ausgeführt
+    break;
+}</code></pre>
+
+  <p>🚫 <strong>Fehlerhaft:</strong></p>
+  <pre><code>switch(x) {
+  case x >= 8: // ❌ nicht erlaubt!
+}</code></pre>
+
+  <hr>
+
+  <h4>✅ Zusammenfassung – Kontrollfluss in Java:</h4>
+  <table>
+    <tr><th>Struktur</th><th>Zweck</th></tr>
+    <tr><td><code>if</code></td><td>Bedingte Ausführung</td></tr>
+    <tr><td><code>if-else</code></td><td>Alternative Zweige</td></tr>
+    <tr><td><code>switch-case</code></td><td>Vergleich auf feste Werte</td></tr>
+    <tr><td><code>? :</code></td><td>Kurzform für einfache Verzweigung</td></tr>
+  </table>
+</div>
+`,
+
+      "Schleifen": `
+<div class="array-content">
+  <h3>🔁 Schleifen</h3>
+  <p>Schleifen ermöglichen das wiederholte Ausführen von Code, solange eine bestimmte Bedingung erfüllt ist. Java bietet dafür drei Haupttypen:</p>
+  <ul>
+    <li><code>while</code></li>
+    <li><code>do-while</code></li>
+    <li><code>for</code></li>
+  </ul>
+  <p>Zusätzlich gibt es Kontrollbefehle wie <code>break</code> und <code>continue</code>.</p>
+
+  <hr>
+
+  <h4>🔄 While-Schleife</h4>
+  <p>Führt Code aus, solange eine Bedingung <code>true</code> ist:</p>
+  <pre><code>int i = 0;
+while(i < 3) {
+  System.out.println(i);
+  i++;
+}
+// Ausgabe: 0, 1, 2</code></pre>
+  <p>⚠️ Wird die Bedingung zu Beginn nicht erfüllt, läuft die Schleife kein einziges Mal.</p>
+
+  <hr>
+
+  <h4>🔂 Do-While-Schleife</h4>
+  <p>Mindestens ein Durchlauf ist garantiert, da die Bedingung <strong>nach</strong> dem ersten Schleifendurchlauf geprüft wird:</p>
+  <pre><code>int j = 0;
+do {
+  System.out.println(j);
+  j++;
+} while(j < 3);
+// Ausgabe: 0, 1, 2</code></pre>
+  <p>📌 Typischer Einsatz bei menügesteuerten Eingaben oder Schleifen, die mindestens einmal ausgeführt werden sollen.</p>
+
+  <hr>
+
+  <h4>📊 Vergleich – Beispiel</h4>
+  <pre><code>int i = 2;
+while(i < 2) {
+  System.out.println(i); // wird NICHT ausgeführt
+  i++;
+}
+
+int j = 2;
+do {
+  System.out.println(j); // wird EINMAL ausgeführt
+  j++;
+} while(j < 2);</code></pre>
+
+  <hr>
+
+  <h4>🔁 For-Schleife</h4>
+  <p>Die klassische Zählschleife mit Start, Abbruchbedingung und Schrittweite im Kopf:</p>
+  <pre><code>for(int i = 0; i < 5; i++) {
+  System.out.println(i);
+}
+// Ausgabe: 0, 1, 2, 3, 4</code></pre>
+  <p>🛠️ <strong>Variationen:</strong></p>
+  <pre><code>for(int i = 10; i > 0; i -= 2) {
+  // Schrittweite -2
+}</code></pre>
+  <p>⛏️ <strong>Vorteil:</strong> Alles übersichtlich in einer Zeile.</p>
+
+  <hr>
+
+  <h4>🛑 Schleifen abbrechen</h4>
+  <p><code>break</code>: Schleife komplett abbrechen</p>
+  <pre><code>while(true) {
+  break; // Schleife endet sofort
+}</code></pre>
+
+  <p><code>continue</code>: Aktuellen Durchlauf überspringen</p>
+  <pre><code>for(int i = 0; i < 5; i++) {
+  if(i == 2) continue;
+  System.out.println(i);
+}
+// Ausgabe: 0, 1, 3, 4</code></pre>
+
+  <hr>
+
+  <h4>🏷️ Schleifen mit Labels</h4>
+  <p>Erlauben das gezielte <code>break</code> aus verschachtelten Schleifen:</p>
+  <pre><code>outerLoop:
+while(true) {
+  while(true) {
+    break outerLoop; // bricht beide Schleifen
+  }
+}</code></pre>
+
+  <hr>
+
+  <h4>✅ Zusammenfassung – Schleifen in Java:</h4>
+  <table>
+    <tr><th>Schleife</th><th>Wann verwenden?</th></tr>
+    <tr><td><code>while</code></td><td>Wiederholung bei vorab bekannter Bedingung</td></tr>
+    <tr><td><code>do-while</code></td><td>Mindestens ein Durchlauf garantiert</td></tr>
+    <tr><td><code>for</code></td><td>Ideal für Zählvorgänge</td></tr>
+    <tr><td><code>break</code></td><td>Schleife komplett abbrechen</td></tr>
+    <tr><td><code>continue</code></td><td>Durchlauf überspringen</td></tr>
+  </table>
+</div>
+`,
+
+      "Vererbung": `
+<div class="array-content">
+  <h3>🧬 Vererbung</h3>
+  <p>Die Vererbung ist ein zentrales Konzept der objektorientierten Programmierung. Sie erlaubt es, gemeinsame Eigenschaften und Methoden in einer <strong>Elternklasse</strong> zu definieren – und diese in <strong>Kindklassen</strong> automatisch zu übernehmen.</p>
+
+  <hr>
+
+  <h4>🏗 Beispielstruktur</h4>
+  <pre><code>public class Vehicle {
+  public void accelerate() { ... }
+  public void brake() { ... }
+}
+
+public class Car extends Vehicle {
+  // erbt accelerate() und brake()
+}</code></pre>
+  <p>🔁 <code>Car</code> erbt von <code>Vehicle</code>. Alle sichtbaren Methoden (z. B. <code>accelerate()</code>, <code>brake()</code>) stehen somit auch <code>Car</code> zur Verfügung.</p>
+
+  <hr>
+
+  <h4>⚠️ Wichtig:</h4>
+  <table>
+    <tr><th>Merkmal</th><th>Erklärung</th></tr>
+    <tr><td><code>private</code>-Methoden</td><td>werden nicht vererbt</td></tr>
+    <tr><td>Nur eine Elternklasse</td><td>Java erlaubt keine Mehrfachvererbung</td></tr>
+    <tr><td>Konstruktoren</td><td>werden nicht automatisch vererbt – aber <code>super()</code> kann sie aufrufen</td></tr>
+    <tr><td><code>Object</code></td><td>jede Klasse erbt implizit von <code>Object</code></td></tr>
+  </table>
+
+  <hr>
+
+  <h4>🧱 Konstruktoren und <code>super()</code></h4>
+  <p>Kindklassen rufen den Konstruktor der Elternklasse mit <code>super(...)</code> auf:</p>
+  <pre><code>public class Vehicle {
+  public Vehicle(String name) {
+    System.out.println("Vehicle: " + name);
+  }
+}
+
+public class Car extends Vehicle {
+  public Car(String name) {
+    super(name); // ruft Vehicle-Konstruktor auf
+  }
+}</code></pre>
+
+  <hr>
+
+  <h4>🔧 Eigene Methoden überschreiben</h4>
+  <p>Kindklassen können Methoden der Elternklasse überschreiben:</p>
+  <pre><code>@Override
+public void brake() {
+  System.out.println("Car is braking...");
+}</code></pre>
+
+  <p>Oder die Elternmethode beibehalten und nur erweitern:</p>
+  <pre><code>@Override
+public void accelerate() {
+  super.accelerate();  // ruft accelerate() aus Vehicle auf
+  System.out.println("Car uses turbo!");
+}</code></pre>
+
+  <hr>
+
+  <h4>🌳 Beispielhafte Vererbungshierarchie</h4>
+  <pre><code>Vehicle
+├── Car
+├── Bike
+└── Boat</code></pre>
+  <p>Alle Unterklassen erben gemeinsame Merkmale von <code>Vehicle</code>, fügen aber eigene Eigenschaften (z. B. Motor beim Car) hinzu.</p>
+
+  <hr>
+
+  <h4>✅ Zusammenfassung: Vererbung in Java</h4>
+  <table>
+    <tr><th>Begriff</th><th>Bedeutung</th></tr>
+    <tr><td><code>extends</code></td><td>leitet eine Kindklasse von Elternklasse ab</td></tr>
+    <tr><td><code>super()</code></td><td>ruft Konstruktor oder Methode der Elternklasse auf</td></tr>
+    <tr><td><code>@Override</code></td><td>überschreibt eine geerbte Methode</td></tr>
+    <tr><td><code>Object</code></td><td>jede Klasse ist automatisch eine <code>Object</code>-Klasse</td></tr>
+  </table>
+</div>
+`,
+
+      "Arrays": `
+<div class="array-content">
+  <h3>🧮 Arrays</h3>
+  <p>Ein <strong>Array</strong> ist ein Objekt in Java, das mehrere Werte desselben Datentyps speichern kann. Es ist besonders nützlich, wenn viele gleichartige Daten verarbeitet werden sollen – z. B. Zahlen, Zeichen oder Objekte.</p>
+
+  <hr>
+
+  <h4>🔢 Ein Array erstellen</h4>
+  <p>🔹 <strong>Variante 1 – mit Werten:</strong></p>
+  <pre><code>int[] numbers = {13, -5, 0, 347546, 6};</code></pre>
+
+  <p>🔹 <strong>Variante 2 – mit fester Länge:</strong></p>
+  <pre><code>int[] emptyArray = new int[5];</code></pre>
+  <p>📌 Das Array <code>emptyArray</code> hat 5 Speicherplätze, nummeriert von 0 bis 4.</p>
+
+  <hr>
+
+  <h4>🎯 Werte zuweisen & abrufen</h4>
+  <pre><code>emptyArray[0] = 13;
+emptyArray[1] = -5;
+// ...
+
+int result = emptyArray[1]; // ergibt -5</code></pre>
+
+  <hr>
+
+  <h4>📚 Arrays mit Objekten</h4>
+  <p>Arrays funktionieren auch mit Objekten:</p>
+  <pre><code>String[] words = {"Hallo", "Welt"};</code></pre>
+
+  <hr>
+
+  <h4>🧭 Mehrdimensionale Arrays</h4>
+  <p>🔹 <strong>2D-Array (z. B. Tabelle):</strong></p>
+  <pre><code>int[][] table = new int[3][4];</code></pre>
+
+  <p>🧠 Vorstellen wie eine Matrix:</p>
+  <pre><code>[0][0] [0][1] [0][2] [0][3]
+[1][0] [1][1] [1][2] [1][3]
+[2][0] [2][1] [2][2] [2][3]</code></pre>
+
+  <p>🔹 <strong>Unterschiedlich große innere Arrays:</strong></p>
+  <pre><code>int[][] uneven = {
+  {1},
+  {3, -5, 7},
+  {2, 8, -456, 6}
+};
+
+int x = uneven[1][2]; // ergibt 7</code></pre>
+  <p>⚠️ Achtung: Zugriff auf nicht vorhandene Indizes (z. B. <code>uneven[0][2]</code>) führt zu Fehlern!</p>
+
+  <hr>
+
+  <h4>📏 Die Länge eines Arrays</h4>
+  <pre><code>int[] arr = new int[3];
+int len = arr.length; // ergibt 3</code></pre>
+  <p>📌 <code>.length</code> ist kein Methodenaufruf, sondern ein Feld.</p>
+
+  <hr>
+
+  <h4>🔁 Durch Arrays iterieren</h4>
+  <p>🔹 <strong>Klassische for-Schleife:</strong></p>
+  <pre><code>for(int i = 0; i < arr.length; i++) {
+  System.out.println(arr[i]);
+}</code></pre>
+
+  <p>🔹 <strong>for-each-Schleife:</strong></p>
+  <pre><code>for(int value : arr) {
+  System.out.println(value);
+}</code></pre>
+  <p>💡 Vorteil: Kürzer, lesbarer, sicherer (kein Indexfehler möglich)</p>
+
+  <hr>
+
+  <h4>✅ Zusammenfassung: Arrays in Java</h4>
+  <table>
+    <tr><th>Eigenschaft</th><th>Beschreibung</th></tr>
+    <tr><td>Fester Datentyp</td><td>Alle Werte haben denselben Typ</td></tr>
+    <tr><td>Feste Länge</td><td>Wird beim Erzeugen festgelegt</td></tr>
+    <tr><td>Index beginnt bei 0</td><td>z. B. <code>arr[0]</code></td></tr>
+    <tr><td>Mehrdimensional</td><td>z. B. <code>int[][] matrix = new int[3][4];</code></td></tr>
+    <tr><td><code>.length</code></td><td>gibt Anzahl der Elemente zurück</td></tr>
+    <tr><td>for-each</td><td>elegante Iteration über alle Werte</td></tr>
+  </table>
+</div>
+`,
+
+      "Methoden": `
+<div class="array-content">
+  <h3>🛠 Methoden</h3>
+  <p>Methoden sind das Werkzeug, um Objekten Fähigkeiten zu geben – etwa <code>accelerate()</code> oder <code>brake()</code>. Gleichzeitig helfen sie, Code mehrfach zu verwenden und sauber zu strukturieren.</p>
+
+  <hr>
+
+  <h4>📐 Aufbau einer Methode</h4>
+  <p>Jede Methode besteht aus:</p>
+  <ul>
+    <li>einem Zugriffsmodifikator (<code>public</code>, <code>private</code>, …)</li>
+    <li>einem Rückgabetyp (<code>int</code>, <code>String</code>, <code>void</code>, …)</li>
+    <li>einem Methodennamen (z. B. <code>multiply</code>)</li>
+    <li>optionalen Parametern in Klammern</li>
+    <li>einem Rumpf in geschweiften Klammern <code>{ ... }</code></li>
+  </ul>
+
+  <pre><code>public static int multiply(int a, int b) {
+  int result = a * b;
+  return result;
+}</code></pre>
+
+  <p>🧠 <strong>Hinweis:</strong></p>
+  <ul>
+    <li><code>void</code> bedeutet: Die Methode gibt keinen Wert zurück.</li>
+    <li>Methodennamen beginnen klein und nutzen camelCase.</li>
+  </ul>
+
+  <hr>
+
+  <h4>⚙️ Methoden aufrufen</h4>
+  <p>🔹 <strong>Option 1 – statische Methode (z. B. in <code>main()</code>):</strong></p>
+  <pre><code>public static void main(String[] args) {
+  int result = multiply(3, 4);
+  System.out.println(result); // Ausgabe: 12
+}</code></pre>
+
+  <p>🔹 <strong>Option 2 – Methode über ein Objekt:</strong></p>
+  <pre><code>Example myObj = new Example();
+int result = myObj.multiply(3, 4);</code></pre>
+
+  <hr>
+
+  <h4>💡 Rückgabewerte</h4>
+  <p>Methoden können alle Datentypen zurückgeben – auch Objekte:</p>
+  <pre><code>public Car createCar() {
+  return new Car("VW", "red", new Engine(...));
+}</code></pre>
+
+  <hr>
+
+  <h4>✨ Direktes Rückgeben</h4>
+  <pre><code>public static int multiply(int a, int b) {
+  return a * b; // Kein extra result nötig
+}</code></pre>
+
+  <hr>
+
+  <h4>🔍 Getter & Setter</h4>
+  <p>Mit Getter-Methoden liest man Felder aus, mit Setter-Methoden verändert man sie. Sie ermöglichen kontrollierten Zugriff von außen:</p>
+  <pre><code>public class Engine {
+  private int power;
+
+  public int getPower() {
+    return power;
+  }
+
+  public void setPower(int power) {
+    this.power = power;
+  }
+}</code></pre>
+
+  <p>🔁 <strong>Automatisch generierbar in Eclipse:</strong><br>
+  Rechtsklick → <code>Source</code> → <code>Generate Getters and Setters</code></p>
+
+  <hr>
+
+  <h4>🧮 Praxisbeispiel mit Getter im Konstruktor</h4>
+  <p>In der Klasse <code>Car</code> kann man z. B. den Spritverbrauch vom Motor abhängig machen:</p>
+  <pre><code>this.fuelConsumption = motor.getPower() * 0.1;</code></pre>
+
+  <hr>
+
+  <h4>🧾 Zusammenfassung: Methoden in Java</h4>
+  <table>
+    <tr><th>Element</th><th>Bedeutung</th></tr>
+    <tr><td><code>public</code></td><td>überall sichtbar</td></tr>
+    <tr><td><code>static</code></td><td>gehört zur Klasse, nicht zum Objekt</td></tr>
+    <tr><td><code>void</code></td><td>kein Rückgabewert</td></tr>
+    <tr><td><code>return</code></td><td>gibt einen Wert zurück</td></tr>
+    <tr><td><code>getter</code></td><td>liest Feld aus</td></tr>
+    <tr><td><code>setter</code></td><td>ändert Feldwert</td></tr>
+  </table>
+</div>
+`,
+
+      "Klassen und Objekte": `
+<div class="array-content">
+  <h3>🧱 Klassen und Objekte</h3>
+  <p>In der objektorientierten Programmierung in Java sind <strong>Klassen</strong> die Baupläne für Objekte. Sie definieren, welche Eigenschaften (Attribute) und Fähigkeiten (Methoden) ein Objekt besitzt.</p>
+
+  <hr>
+
+  <h4>🚗 Beispielklasse: Car</h4>
+  <pre><code>public class Car {
+  private double fuelConsumption;
+  private String color;
+  private String make;
+  private int price;
+  private int weight;
+  private Engine motor;
+
+  public void accelerate() {}
+  public void brake() {}
+}</code></pre>
+  <p><strong>Erklärung:</strong></p>
+  <ul>
+    <li>Die Attribute (z. B. <code>color</code>, <code>make</code>, <code>motor</code>) beschreiben das Objekt.</li>
+    <li><code>String</code> ist ein Klassen-Typ (kein primitiver Typ).</li>
+    <li><code>Engine</code> ist eine eigene Klasse – Objekte können andere Objekte enthalten!</li>
+  </ul>
+
+  <hr>
+
+  <h4>🧰 Konstruktoren</h4>
+  <p>Ein Konstruktor wird benötigt, um ein neues Objekt mit Startwerten zu erzeugen:</p>
+  <pre><code>public Car(String make, String color, Engine motor) {
+  this.make = make;
+  this.color = color;
+  this.motor = motor;
+}</code></pre>
+  <ul>
+    <li>Der Konstruktor heißt immer gleich wie die Klasse</li>
+    <li><code>this</code> verweist auf die Instanzvariablen der Klasse</li>
+  </ul>
+
+  <hr>
+
+  <h4>🔁 Konstruktoren überladen</h4>
+  <p>Man kann mehrere Konstruktoren definieren – mit unterschiedlicher Parameteranzahl:</p>
+  <pre><code>public Engine(String type, int power) {
+  this.type = type;
+  this.power = power;
+}
+
+public Engine(String type, int power, int weight) {
+  this.type = type;
+  this.power = power;
+  this.weight = weight;
+}</code></pre>
+  <p>So können flexible Initialisierungen durchgeführt werden.</p>
+
+  <hr>
+
+  <h4>⚙️ Objektübergabe im Konstruktor</h4>
+  <p><strong>Option 1:</strong> Ein fertiges <code>Engine</code>-Objekt wird übergeben:</p>
+  <pre><code>Engine e = new Engine("Diesel", 150, 300);
+Car myCar = new Car("BMW", "red", e);</code></pre>
+
+  <p><strong>Option 2:</strong> Das Objekt wird direkt im Konstruktor erzeugt:</p>
+  <pre><code>public Car(String make, String color, String type, int power, int weight) {
+  this.make = make;
+  this.color = color;
+  this.motor = new Engine(type, power, weight);
+}</code></pre>
+
+  <hr>
+
+  <h4>🛠 Objekt-Erzeugung aus main</h4>
+  <p>In einer separaten Klasse mit <code>main()</code>-Methode erzeugst du neue Objekte:</p>
+  <pre><code>public class App {
+  public static void main(String[] args) {
+    Engine myEngine = new Engine("Petrol", 200, 250);
+    Car myFirstCar = new Car("VW", "blue", myEngine);
+  }
+}</code></pre>
+
+  <p>💡 Ein Objekt (z. B. <code>Engine</code>) kann in mehreren Autos verwendet werden:</p>
+  <pre><code>Car car1 = new Car("Opel", "green", myEngine);
+Car car2 = new Car("Audi", "black", myEngine);</code></pre>
+
+  <hr>
+
+  <h4>🔄 Wiederholung – Objektorientierung:</h4>
+  <table>
+    <tr><th>Begriff</th><th>Bedeutung</th></tr>
+    <tr><td><code>Klasse</code></td><td>Bauplan (enthält Attribute + Methoden)</td></tr>
+    <tr><td><code>Objekt</code></td><td>konkrete Instanz einer Klasse</td></tr>
+    <tr><td><code>Konstruktor</code></td><td>Methode zur Erzeugung eines Objekts</td></tr>
+    <tr><td><code>this</code></td><td>verweist auf das aktuelle Objekt</td></tr>
+    <tr><td><code>Attribute</code></td><td>Eigenschaften eines Objekts</td></tr>
+    <tr><td><code>Methoden</code></td><td>Fähigkeiten eines Objekts</td></tr>
+  </table>
+</div>
+`,
+"Exception Handling": `
+<div class="array-content">
+  <h3>🛡 Exception Handling</h3>
+  <p><strong>Exceptions</strong> sind Fehler, die während der Programmausführung auftreten. Ohne Behandlung können sie zum Absturz des Programms führen.</p>
+
+  <hr>
+
+  <h4>❗️ Arten von Fehlern</h4>
+  <p>In Java unterscheidet man drei Hauptarten:</p>
+  <table>
+    <tr><th>Art</th><th>Beschreibung</th><th>Beispiel</th></tr>
+    <tr><td>Error</td><td>Schwerwiegende Probleme außerhalb der Programmlogik – kaum abfangbar</td><td>Speicherüberlauf</td></tr>
+    <tr><td>RuntimeException</td><td>Fehler zur Laufzeit durch fehlerhafte Logik</td><td>ArrayIndexOutOfBoundsException</td></tr>
+    <tr><td>(Checked) Exception</td><td>Muss beim Codieren abgefangen oder angegeben werden</td><td>FileNotFoundException</td></tr>
+  </table>
+
+  <hr>
+
+  <h4>🧪 Beispiel: Array-Fehler</h4>
+  <pre><code>int[] arr = {1, 2, 3};
+System.out.println(arr[5]);  // → ArrayIndexOutOfBoundsException</code></pre>
+
+  <hr>
+
+  <h4>🧯 Fehler behandeln mit try-catch</h4>
+  <p>Fehler lassen sich mit einem <code>try-catch</code>-Block abfangen:</p>
+  <pre><code>try {
+  // Code, der potenziell Fehler verursacht
+  Scanner scanner = new Scanner(new File("daten.txt"));
+} catch(FileNotFoundException e) {
+  System.out.println("Datei nicht gefunden!");
+}</code></pre>
+  <p>📌 Wenn der Fehler auftritt:</p>
+  <ul>
+    <li>Wird der try-Block abgebrochen</li>
+    <li>Der zugehörige catch-Block wird ausgeführt</li>
+  </ul>
+
+  <hr>
+
+  <h4>🚨 throws vs. try-catch</h4>
+  <p>🔹 <strong><code>throws</code> im Methodenkopf:</strong></p>
+  <pre><code>public void loadFile() throws FileNotFoundException {
+  Scanner s = new Scanner(new File("daten.txt"));
+}</code></pre>
+  <p>⚠️ Der Fehler wird weitergereicht – muss aber irgendwo abgefangen werden!</p>
+
+  <p>🔹 <strong><code>try-catch</code> – Fehler direkt behandeln:</strong></p>
+  <pre><code>try {
+  Scanner s = new Scanner(new File("daten.txt"));
+} catch(FileNotFoundException e) {
+  // Fehlerbehandlung
+}</code></pre>
+
+  <hr>
+
+  <h4>🧩 Mehrere catch-Blöcke</h4>
+  <pre><code>try {
+  // Code
+} catch(IOException e1) {
+  // Behandlung für IO-Fehler
+} catch(NumberFormatException e2) {
+  // Behandlung für Formatfehler
+}</code></pre>
+
+  <hr>
+
+  <h4>⚙️ catch mit mehreren Typen</h4>
+  <pre><code>try {
+  // Code
+} catch(IOException | NumberFormatException e) {
+  // gemeinsame Behandlung
+}</code></pre>
+
+  <hr>
+
+  <h4>🧼 finally-Block</h4>
+  <p>Wird <strong>immer</strong> ausgeführt, egal ob ein Fehler auftrat oder nicht:</p>
+  <pre><code>try {
+  // Code
+} catch(Exception e) {
+  // Fehlerbehandlung
+} finally {
+  System.out.println("Aufräumarbeiten...");
+}</code></pre>
+  <p>📌 Praktisch für:</p>
+  <ul>
+    <li>Dateien schließen</li>
+    <li>Speicher freigeben</li>
+    <li>Logs schreiben</li>
+  </ul>
+
+  <hr>
+
+  <h4>✅ Zusammenfassung: Exception Handling in Java</h4>
+  <table>
+    <tr><th>Element</th><th>Funktion</th></tr>
+    <tr><td><code>try</code></td><td>enthält fehleranfälligen Code</td></tr>
+    <tr><td><code>catch</code></td><td>fängt passende Exceptions ab</td></tr>
+    <tr><td><code>finally</code></td><td>wird immer ausgeführt</td></tr>
+    <tr><td><code>throws</code></td><td>gibt an, dass eine Methode eine Exception werfen kann</td></tr>
+    <tr><td><code>Exception</code></td><td>Oberklasse aller auswerfbaren Fehler</td></tr>
+    <tr><td><code>RuntimeException</code></td><td>ungeprüft – optional abfangbar</td></tr>
+    <tr><td><code>FileNotFoundException</code></td><td>geprüft – muss behandelt werden</td></tr>
+  </table>
+</div>
+`,
+
+    };
+
+    const sortSelect = document.getElementById('sort-select');
+    const projectContainer = document.getElementById('project-container');
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const cardDetail = document.getElementById('card-detail');
+
+    function getHistory() {
+      return JSON.parse(localStorage.getItem('clickHistory')) || [];
+    }
+
+    function updateHistory(title) {
+      let history = getHistory();
+      history = history.filter(item => item !== title);
+      history.unshift(title);
+      localStorage.setItem('clickHistory', JSON.stringify(history.slice(0, 50)));
+    }
+
+    function sortByRecent() {
+      const history = getHistory();
+      cards.sort((a, b) => {
+        const aIndex = history.indexOf(a.dataset.title);
+        const bIndex = history.indexOf(b.dataset.title);
+        return (aIndex === -1 ? Infinity : aIndex) - (bIndex === -1 ? Infinity : bIndex);
+      });
+      cards.forEach(card => projectContainer.appendChild(card));
+    }
+
+    sortByRecent();
+
+    sortSelect.addEventListener('change', () => {
+      if (sortSelect.value === 'alphabetical') {
+        cards.sort((a, b) => a.dataset.title.localeCompare(b.dataset.title));
+      } else {
+        sortByRecent();
+      }
+      cards.forEach(card => projectContainer.appendChild(card));
+    });
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const title = card.dataset.title;
+        updateHistory(title);
+        projectContainer.style.display = 'none';
+        cardDetail.innerHTML = `
+          
+          <div>${cardDetails[title]}</div>
+          <button onclick="goBack()">Zurück</button>`;
+        cardDetail.style.display = 'block';
+      });
+    });
+
+    window.goBack = () => {
+      cardDetail.style.display = 'none';
+      projectContainer.style.display = 'grid';
+      sortByRecent();
+    };
+  });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multiple Choice – CodePilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * {
+      box-sizing: border-box;
+      transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, background-image 0.5s ease;
+    }
+
+  body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0a0a23;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+         cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFklEQVRYR9WXURLDIAhE6/0PbSdOtUpcd1Gnpv1KGpTHBpCE1/cXq+vrMph7dGvXZTtpfW10DCA5jrH1H0Jhs5E0hnZdCR+vb5S8Nn8mQCeS9BdSalYJqMBjAGzq59xAESN7VFVUgV8AZB/dZBR7QTFDCqGquvUBVVoEtgIwpQRzmANSFHgWQKExHdIrPeuMvQNDarXe6nC/AutgV3JW+6bgqQLeV8FekRtgV+ToDKEKnACYKsfZjjkam7a0ZpYTytwmgainpC3HvwBocgKOxqRjehoR9DFKNFYtOwCGYCszobeCbl26N6yyQ6g8X/Wex/rBPsNEV6qAMaJPMynIHQCoSqS9JSMmwef51LflTgCRszU7DvAGiV6mHWfsaVUAAAAASUVORK5CYII=), auto;
+}
+ /* Hand-Cursor bei Hover über Buttons, Links, Popup-Buttons und Logout */
+button:hover,
+a:hover,
+.bg-popup-btn:hover,
+.logout-bottom-btn:hover,
+
+/* Cursor für Quiz-Elemente */
+input[type="radio"]:hover,
+input[type="checkbox"]:hover,
+label:hover,
+select:hover,
+.quiz-btn:hover {
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
+}
+
+
+    body.light-mode {
+      background-color: #f5f5f5;
+      color: #111;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #0a0a23;
+      padding: 15px 40px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      height: 80px;
+    }
+
+    body.light-mode .navbar {
+      background-color: #ffffff;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 50px;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 8px;
+    }
+
+    .navbar a:hover {
+      background: #ffd500;
+      border-radius: 5px;
+    }
+
+    body.light-mode .navbar a,
+    body.light-mode .logo {
+      color: #111;
+    }
+
+    .sign-up-btn {
+      background: #ffd500;
+      color: black;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 2px 2px 0 #000;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .toggle-mode-btn {
+      background: none;
+      border: 1px solid #fff;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    body.light-mode .toggle-mode-btn {
+      border-color: #111;
+      color: #111;
+    }
+
+    .spacer {
+      height: 80px;
+    }
+
+    .editor-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .left-panel, .right-panel {
+      flex: 1;
+      padding: 20px;
+      min-width: 300px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+    }
+
+    .left-panel {
+      background-image: url('night.jpeg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      border-right: 1px solid #444;
+    }
+
+    body.light-mode .left-panel {
+      background-image: url('day.jpeg');
+      color: #000;
+      border-right: 1px solid #ccc;
+    }
+
+    .right-panel {
+      background: transparent;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    h2 {
+      font-family: 'Courier New', monospace;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .CodeMirror {
+      height: auto;
+      max-height: 50vh;
+      border: 1px solid #ccc;
+      font-family: monospace;
+      font-size: 16px;
+      resize: vertical;
+    }
+
+  .console {
+  background: #ffffff;
+  color: #000;
+  padding: 10px;
+  min-height: 120px;
+  max-height: 30vh;
+  font-family: monospace;
+  border: 1px solid #ccc;
+  overflow-y: auto;     /* ← wichtig: Scrollen bei Überlauf */
+  font-size: 16px;
+  flex-shrink: 0;
+  white-space: pre-wrap; /* ← sorgt dafür, dass Zeilen umbrechen */
+}
+
+    .run-btn {
+      padding: 10px 20px;
+      background-color: #007bff;
+      border: none;
+      font-family: 'Press Start 2P', monospace;
+      color: white;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 #000;
+      width: 120px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .run-btn:hover {
+      background-color: #0056b3;
+      transform: translateY(-3px);
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .login-container {
+      background-color: rgba(31, 36, 59, 0.8);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px #ffd500;
+      width: 90%;
+      max-width: 1000px;
+      text-align: center;
+      margin: 0 auto;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    body.light-mode .login-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 12px #999;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #0a0a23;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      z-index: 200;
+      border-top: 2px solid #333;
+    }
+
+    .bar-button {
+      font-family: 'Press Start 2P', monospace;
+      background-color: #0a0a23;
+      color: #fff;
+      border: 2px solid #cfd8dc;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 #000;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .bar-button:hover {
+      background-color: #1c1c3a;
+      transform: translateY(-3px);
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .bar-button.yellow {
+      background-color: #ffd500;
+      color: black;
+      font-weight: bold;
+      border-color: #b28800;
+    }
+
+    .bar-button.yellow:hover {
+      background-color: #ffea70;
+    }
+
+    /* Antwortoptionen im Retro-Stil */
+#quiz-form label {
+  display: block;
+  background-color: #1c1c3a;
+  border: 2px solid #ffd500;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin: 0;
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.2s ease;
+  box-shadow: 2px 2px 0 #000;
+  color: white;
+}
+
+#quiz-form label:hover {
+  background-color: #2c2c4f;
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 #000;
+}
+
+#quiz-form input[type="radio"] {
+  margin-right: 10px;
+  transform: scale(1.3);
+  vertical-align: middle;
+}
+
+/* Light Mode Anpassungen */
+body.light-mode #quiz-form label {
+  background-color: #fff9c4;
+  color: #111;
+  border-color: #b28800;
+}
+
+body.light-mode #quiz-form label:hover {
+  background-color: #fff176;
+}
+
+/* Custom Alert Overlay */
+.alert-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(10, 10, 35, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: 'Press Start 2P', monospace;
+}
+
+/* Hinweisbox selbst */
+.alert-box {
+  background-color: #1c1c3a;
+  color: #fff;
+  border: 3px solid #ffd500;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 4px 4px 0 #000;
+  max-width: 90%;
+  width: 400px;
+}
+
+.alert-box button {
+  margin-top: 20px;
+  font-family: 'Press Start 2P', monospace;
+  padding: 10px 20px;
+  background-color: #ffd500;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.alert-box button:hover {
+  background-color: #ffea70;
+}
+
+/* Light Mode für Alert */
+body.light-mode .alert-box {
+  background-color: #fff9c4;
+  color: #111;
+  border-color: #b28800;
+}
+
+body.light-mode .alert-box button {
+  background-color: #ffd500;
+  color: #000;
+}
+
+body.light-mode .alert-box button:hover {
+  background-color: #ffe770;
+}
+  </style>
+</head>
+
+<body>
+
+  <!-- 🔐 Login-Prüfung -->
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      alert("Bitte logge dich zuerst ein.");
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <!-- Navigation -->
+  <div class="navbar">
+    <div class="navbar-left">
+      <div class="logo">
+        <img src="rakete.png" alt="Logo" />
+        CodePilot
+      </div>
+      <a href="seite1.html">Home</a>
+      <a href="index.html">AI</a>
+      <a href="seite2.html">Quiz</a>
+      <a href="wiki.html">Wiki</a>
+      <a href="konto.html">Konto</a>
+      <a href="#" class="sign-up-btn" id="loginStatusBtn">Sign up</a>
+      <button id="toggle-mode" class="toggle-mode-btn">🌙</button>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <!-- MC-Fragebereich -->
+  <div class="editor-container">
+    <div class="left-panel">
+      <div class="login-container">
+   <h2>Array-Limit</h2>
+<p><p>Was ist bei Arrays zu beachten?</p></p>
+</p>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <h2>Antwortmöglichkeiten</h2>
+<form id="quiz-form">
+  <label><input type="radio" name="answer" value="a"> A) Die Größe des Arrays muss zur Laufzeit vorgegeben sein.</label><br>
+  <label><input type="radio" name="answer" value="b"> B) Arrays können beliebig zur Laufzeit in Größe und Inhalt ändern.</label><br>
+  <label><input type="radio" name="answer" value="c"> C) Sie können nur primitive Datentypen speichern.</label><br>
+  <label><input type="radio" name="answer" value="d"> D) Sie können nur nicht primitive Datentypen speichern.</label>
+</form>
+
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+   <div class="bottom-bar">
+  <button class="bar-button" onclick="toggleHinweis()">💡 Hinweis</button>
+  <button class="bar-button" onclick="window.location.href='quiz6.2.html'">Zurück</button>
+  <button class="bar-button yellow" onclick="checkAnswer()">▶ Erledigt</button>
+  <button class="bar-button" onclick="window.location.href='quiz6.4.html'">Nächste</button>
+</div>
+
+  <!-- Custom Alert -->
+<div id="customAlert" class="alert-overlay">
+  <div class="alert-box">
+    <p id="alertMessage">Nachricht</p>
+    <button onclick="closeAlert()">OK</button>
+  </div>
+</div>
+  <!-- Light/Dark Mode + Benutzeranzeige -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('toggle-mode');
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        toggleBtn.textContent = '☀️';
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        toggleBtn.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      });
+
+      const user = JSON.parse(localStorage.getItem('user'));
+      const loginBtn = document.getElementById('loginStatusBtn');
+      if (user && loginBtn) {
+        loginBtn.textContent = "Logged In";
+        loginBtn.style.pointerEvents = "none";
+        loginBtn.style.backgroundColor = "#ffd500";
+        loginBtn.style.color = "#000";
+      }
+
+      if (user) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "user-fixed";
+
+        const avatar = document.createElement("img");
+        avatar.src = user.character || "character1.gif";
+
+        const name = document.createElement("span");
+        name.textContent = user.username;
+
+        const logout = document.createElement("button");
+        logout.textContent = "Logout";
+        logout.onclick = () => {
+          localStorage.removeItem("user");
+          window.location.href = "login.html";
+        };
+
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(name);
+        wrapper.appendChild(logout);
+        document.body.appendChild(wrapper);
+      }
+    });
+  </script>
+
+  <script>
+  async function checkAnswer() {
+    const selected = document.querySelector('input[name="answer"]:checked');
+    if (!selected) {
+      showAlert("❗ Bitte wähle eine Antwort aus.");
+      return;
+    }
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      showAlert("Fehler: Benutzer nicht gefunden.");
+      return;
+    }
+
+    if (selected.value === "a") {
+      confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+      showAlert("✅ Richtig! Arrays in Java haben eine feste Größe, die bei der Initialisierung angegeben werden muss.");
+
+      const solved = JSON.parse(localStorage.getItem('mcProgress')) || [];
+      if (!solved.includes("frage28")) {
+        solved.push("frage28");
+        localStorage.setItem('mcProgress', JSON.stringify(solved));
+
+        try {
+          const res = await fetch("http://localhost:3000/api/update-progress", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: user.username,
+              addXp: 20,
+              addExercise: 1
+            })
+          });
+          const result = await res.json();
+          console.log("Server-Antwort:", result);
+        } catch (err) {
+          console.error("Fehler beim Senden des Fortschritts:", err);
+        }
+      }
+    } else {
+      showAlert("❌ Falsch!");
+    }
+  }
+
+</script>
+
+
+
+
+  <!-- Confetti Script -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Benutzeranzeige-Stil -->
+  <style>
+    .user-fixed {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 999;
+    }
+
+    .user-fixed img {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+    }
+
+    .user-fixed span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: white;
+    }
+
+    .user-fixed button {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 6px 10px;
+      background: #ffd500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    body.light-mode .user-fixed span {
+      color: black;
+    }
+  </style>
+    <script>
+      const hinweise = [
+  "Tipp 1: Arrays in Java haben immer eine feste Länge – die Größe wird bei der Erstellung festgelegt.",
+  "Tipp 2: Ein Array kann primitive oder Referenztypen enthalten – aber kein Mix beider.",
+  "Tipp 3: Einmal erstellte Arrays können ihren Speicherplatz nicht mehr ändern – du brauchst ein neues Array für eine andere Größe."
+];
+let aktuellerHinweis = 0;
+
+ let sichtbar = false;
+  let typingInterval;
+
+  function toggleHinweis() {
+  const container = document.getElementById("forscher-container");
+  const sprechtext = document.getElementById("sprechtext");
+
+  if (!sichtbar) {
+    container.classList.add("sichtbar");
+    sprechtext.textContent = "";
+    typeText(hinweise[aktuellerHinweis], sprechtext);
+    aktuellerHinweis = (aktuellerHinweis + 1) % hinweise.length;
+  } else {
+    container.classList.remove("sichtbar");
+    clearInterval(typingInterval);
+    sprechtext.textContent = "";
+  }
+
+  sichtbar = !sichtbar;
+}
+
+  function typeText(text, targetElement) {
+    let i = 0;
+    typingInterval = setInterval(() => {
+      if (i < text.length) {
+        targetElement.textContent += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 40);
+  }
+
+  function showAlert(message) {
+  document.getElementById("alertMessage").textContent = message;
+  document.getElementById("customAlert").style.display = "flex";
+}
+
+function closeAlert() {
+  document.getElementById("customAlert").style.display = "none";
+}
+
+</script>
+<style>
+  #forscher-container {
+  position: fixed;
+  bottom: -550px; /* Startposition: außerhalb des Bildes */
+  left: -15px;     /* ganz links im Bild */
+  transition: bottom 1.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* linksbündig */
+  z-index: 1000;
+}
+
+#forscher-container.sichtbar {
+  bottom: 0px; /* sichtbar über Bottom-Bar (falls diese 80px hoch ist) */
+}
+
+
+  .forscher-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  #forscher {
+    width: 300px;
+    image-rendering: pixelated;
+  }
+
+  .sprechblase {
+    background: #ffffff;
+    color: #000000;
+    padding: 20px;
+    border: 5px solid #000000;
+    border-radius: 12px;
+    position: absolute;
+    top: 40px;
+    left: 320px;
+    font-size: 10px;
+    font-family: 'Press Start 2P', monospace;
+    width: 250px;
+    text-align: left;
+    z-index: 2;
+  }
+
+  .sprechblase::before {
+    content: "";
+    position: absolute;
+    bottom: -22px;
+    left: 18px;
+    width: 0;
+    height: 0;
+    border-left: 22px solid transparent;
+    border-right: 22px solid transparent;
+    border-top: 17px solid #000000;
+    z-index: 1;
+  }
+
+  .sprechblase::after {
+    content: "";
+    position: absolute;
+    bottom: -18px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid #ffffff;
+    z-index: 2;
+  }
+</style>
+
+
+  <!-- Benutzeranzeige-Stil -->
+  <style>
+    .user-fixed {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 999;
+    }
+
+    .user-fixed img {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+    }
+
+    .user-fixed span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: white;
+    }
+
+    .user-fixed button {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 6px 10px;
+      background: #ffd500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    body.light-mode .user-fixed span {
+      color: black;
+    }
+
+  </style>
+  <div id="forscher-container">
+  <div class="forscher-wrapper">
+    <img src="forscher.png" id="forscher" alt="Pixel-Forscher">
+    <div class="sprechblase"><span id="sprechtext"></span></div>
+  </div>
+</div>
+</body>
+</html>

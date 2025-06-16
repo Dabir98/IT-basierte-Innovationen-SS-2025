@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodePilot – Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0a0a23;
+      background-image: url('night.jpeg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      color: white;
+      transition: background 0.5s ease, color 0.5s ease;
+      overflow: hidden;
+    }
+
+    body.light-mode {
+      background-color: #ffffff;
+      background-image: url('day.jpeg');
+      color: #111;
+    }
+
+    .toggle-mode-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 999;
+      background: none;
+      border: 2px solid white;
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    body.light-mode .toggle-mode-btn {
+      border-color: #111;
+      color: #111;
+    }
+.wrapper {
+  justify-content: flex-start; /* Login weiter nach oben */
+  padding-top: 60px; /* Abstand zum oberen Rand */
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .login-container {
+      background-color: rgba(31, 36, 59, 0.8);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px #ffd500;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    body.light-mode .login-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 12px #999;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    input {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      padding: 12px;
+      width: 90%;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+    }
+
+    input:focus {
+  transform: scale(1.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px #ffffff;
+  outline: none;
+}
+
+body.light-mode input:focus {
+  transform: scale(1.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px #000000;
+  outline: none;
+}
+
+
+    .login-btn {
+  position: relative;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  background-color: #ffd500;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #806a01;
+  transition: box-shadow 0.2s ease;
+  margin-top: 10px;
+  animation: pulseGlow 2s infinite;
+}
+
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 #000;
+  background-color: #ffd500;
+}
+
+.login-btn:active {
+  transform: translateY(5px);
+  box-shadow: 0 2px 0 #806a01;
+}
+
+body.light-mode .login-btn {
+  color: black;
+  background-color: #ffd500;
+  box-shadow: 0 4px 0 #bca600;
+}
+
+    .message {
+      margin-top: 15px;
+      font-size: 12px;
+    }
+
+    .error {
+      color: #ff5555;
+    }
+
+    .success {
+      color: #00ffcc;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 15px;
+      color: #ffd500;
+      font-size: 10px;
+      text-decoration: none;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    @keyframes floatText {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.float-text {
+  display: inline-block;
+  animation: floatText 1.5s ease-in-out infinite;
+  will-change: transform;
+  pointer-events: none;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 4px #ffd500, 0 0 8px #ffd500;
+  }
+  50% {
+    box-shadow: 0 0 12px #ffd500, 0 0 12px #ffd500;
+  }
+}
+
+
+@keyframes floatText {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.floating-logo {
+  animation: floatText 2s ease-in-out infinite;
+  will-change: transform;
+  pointer-events: none;
+}
+.login-container {
+  margin-top: 5px;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Dark-/Light-Mode Button -->
+  <button id="toggle-mode" class="toggle-mode-btn">🌙</button>
+
+ <div class="hero-title" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 100px; margin-bottom: 0;">
+  <h1 class="floating-logo" style="font-family: 'Press Start 2P', monospace; font-size: 50px; color: white; text-shadow: 1px 1px 0 #000;">
+    CodePilot
+  </h1>
+  <img src="rakete.png" alt="Rakete" class="rakete" style="height: 60px;">
+</div>
+
+
+  <div class="wrapper">
+    <div class="login-container">
+      <h1 class="float-text">Login</h1>
+      <form id="login-form">
+        <input type="text" id="username" placeholder="Benutzername" required><br>
+        <input type="password" id="password" placeholder="Passwort" required><br>
+        <button type="submit" class="login-btn">Login</button>
+        <p id="login-msg" class="message"></p>
+        <a href="register.html">Noch kein Konto? Registrieren</a>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Dark-/Light-Mode Umschalter
+    window.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('toggle-mode');
+
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        toggleBtn.textContent = '☀️';
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        toggleBtn.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      });
+    });
+
+    // Login-Logik
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const msgEl = document.getElementById('login-msg');
+
+      msgEl.textContent = '';
+      msgEl.className = 'message';
+
+      try {
+        const res = await fetch('http://localhost:3000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          const { username, character } = data;
+
+          const characterDescriptions = {
+            "character1.gif": "Cyron – Ein cybernetischer Krieger aus der Eiszeit. Kühl im Kopf, tödlich im Kampf.",
+            "character2.gif": "Pixelkaiser – Ein königlicher Streiter mit Krone und rotem Umhang. Seine Loyalität kennt keine Grenzen.",
+            "character3.gif": "Rex – Der pixelige Rebell mit Stirnband und stählerner Faust. Kämpft für Gerechtigkeit und Frühstücksflocken!",
+            "character4.gif": "Nullbit – Ein gescheitertes Experiment der 8-Bit-Wissenschaft. Kein Gesicht, kein Name – nur Code.",
+            "character5.gif": "Neonshade – Ein Schatten aus der Zukunft. Niemand weiß, wer sich unter der Maske verbirgt.",
+            "character6.gif": "Lunara – Eine rätselhafte Magierin mit himmelblauen Haaren. Hüterin vergessener Zauber.",
+            "character7.gif": "Lea – Naturwächterin mit grüner Aura. Ihre Blätter flüstern von alten Legenden.",
+            "character8.gif": "Shadow – Der Krieger der Nordlande. Hat mehr Mut als Pixel im Schwertgriff.",
+            "character9.gif": "Daxter – Ein lautloser Kämpfer aus den Schatten von Bitō.",
+            "character10.gif": "Glitron – Tanzender Datenspeer aus der Galaxie Zeta. Bewegungen sind Code.",
+            "character11.gif": "Bluette – Wirbelwind-Zauberin. Kontrolliert Regen, Wind und Schicksal.",
+            "character12.gif": "Hexa – Die violette Schattenhexe mit flammenden Augen."
+          };
+
+          const characterName = characterDescriptions[character] || "Unbekannter Charakter";
+
+          localStorage.setItem('user', JSON.stringify({ username, character, characterName }));
+
+          msgEl.textContent = '✅ Login erfolgreich! Weiterleitung...';
+          msgEl.classList.add('success');
+          setTimeout(() => {
+            window.location.href = 'seite1.html';
+          }, 1500);
+        } else {
+          msgEl.textContent = data.error || '❌ Ungültige Anmeldedaten';
+          msgEl.classList.add('error');
+        }
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = '❌ Serverfehler';
+        msgEl.classList.add('error');
+      }
+    });
+  </script>
+</body>
+</html>

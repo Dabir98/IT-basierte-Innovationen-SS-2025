@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Forscher Hinweis</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background: #1e1e1e;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    button {
+      font-size: 14px;
+      padding: 12px 24px;
+      background: #ffcc00;
+      border: none;
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+      box-shadow: 0 4px #b38f00;
+      transition: transform 0.2s;
+      margin-bottom: 30px;
+    }
+
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #b38f00;
+    }
+
+    #forscher-container {
+      position: fixed;
+      bottom: -450px;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: bottom 1.5s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #forscher-container.sichtbar {
+      bottom: 0px;
+    }
+
+    .forscher-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    #forscher {
+      width: 350px;
+      image-rendering: pixelated;
+    }
+
+    .sprechblase {
+      background: #ffffff;
+      color: #000000;
+      padding: 20px;
+      border: 5px solid #000000;
+      border-radius: 12px;
+      position: absolute;
+      top: 40px;
+      left: 320px;
+      font-size: 10px;
+      width: 220px;
+      text-align: left;
+      z-index: 2;
+    }
+
+    /* Schwarze Umrandung der Spitze */
+    .sprechblase::before {
+      content: "";
+      position: absolute;
+      bottom: -22px;
+      left: 18px;
+      width: 0;
+      height: 0;
+      border-left: 22px solid transparent;
+      border-right: 22px solid transparent;
+      border-top: 17px solid #000000;
+      z-index: 1;
+    }
+
+    /* Weiße Spitze */
+    .sprechblase::after {
+      content: "";
+      position: absolute;
+      bottom: -18px;
+      left: 20px;
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 20px solid #ffffff;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="toggleHinweis()">Hinweis</button>
+
+  <div id="forscher-container">
+    <div class="forscher-wrapper">
+      <img src="forscher.png" id="forscher" alt="Pixel-Forscher">
+      <div class="sprechblase"><span id="sprechtext"></span></div>
+    </div>
+  </div>
+
+  <script>
+    const text = "Tipp: Wiederhole die Schleife bis zur Bedingung!";
+    let sichtbar = false;
+    let typingInterval;
+
+    function toggleHinweis() {
+      const container = document.getElementById("forscher-container");
+      const sprechtext = document.getElementById("sprechtext");
+
+      if (!sichtbar) {
+        container.classList.add("sichtbar");
+        sprechtext.textContent = "";
+        typeText(text, sprechtext);
+      } else {
+        container.classList.remove("sichtbar");
+        clearInterval(typingInterval);
+        sprechtext.textContent = "";
+      }
+
+      sichtbar = !sichtbar;
+    }
+
+    function typeText(text, targetElement) {
+      let i = 0;
+      typingInterval = setInterval(() => {
+        if (i < text.length) {
+          targetElement.textContent += text.charAt(i);
+          i++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, 40); // Geschwindigkeit: 40ms pro Buchstabe
+    }
+  </script>
+</body>
+</html>

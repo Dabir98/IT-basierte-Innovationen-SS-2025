@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodePilot – Wiki</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style1.css">
+  <style>
+         body {
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFklEQVRYR9WXURLDIAhE6/0PbSdOtUpcd1Gnpv1KGpTHBpCE1/cXq+vrMph7dGvXZTtpfW10DCA5jrH1H0Jhs5E0hnZdCR+vb5S8Nn8mQCeS9BdSalYJqMBjAGzq59xAESN7VFVUgV8AZB/dZBR7QTFDCqGquvUBVVoEtgIwpQRzmANSFHgWQKExHdIrPeuMvQNDarXe6nC/AutgV3JW+6bgqQLeV8FekRtgV+ToDKEKnACYKsfZjjkam7a0ZpYTytwmgainpC3HvwBocgKOxqRjehoR9DFKNFYtOwCGYCszobeCbl26N6yyQ6g8X/Wex/rBPsNEV6qAMaJPMynIHQCoSqS9JSMmwef51LflTgCRszU7DvAGiV6mHWfsaVUAAAAASUVORK5CYII=), auto;
+}
+
+button:hover,
+a:hover,
+.bg-popup-btn:hover,
+.logout-bottom-btn:hover {
+    cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
+  }
+    .user-fixed {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 999;
+    }
+
+    .user-fixed img {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+    }
+
+    .user-fixed span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: white;
+    }
+
+    .user-fixed button {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 6px 10px;
+      background: #ffd500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    body.light-mode .user-fixed span {
+      color: black;
+    }
+
+    .course-img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .title-icon {
+      height: 100px;
+      margin-bottom: -20px;
+      filter: drop-shadow(0 0 4px #ffd500);
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 2px #ffd500); }
+      to   { filter: drop-shadow(0 0 8px #ffd500); }
+    }
+
+    h2.centered-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 🔐 Login prüfen -->
+<script>
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    alert("Bitte logge dich zuerst ein.");
+    window.location.href = "login.html";
+  }
+</script>
+
+<!-- Navigation -->
+<div class="navbar">
+  <div class="navbar-left">
+    <div class="logo">
+      <img src="rakete.png" alt="Logo" />
+      CodePilot
+    </div>
+    <a href="seite1.html">Home</a>
+    <a href="index.html">AI</a>
+    <a href="seite2.html">Quiz</a>
+    <a href="wiki.html" class="active">Wiki</a>
+    <a href="konto.html">Konto</a>
+    <a href="#" class="sign-up-btn" id="loginStatusBtn">Sign up</a>
+    <button id="toggle-mode" class="toggle-mode-btn">🌙</button>
+  </div>
+</div>
+
+<!-- Benutzeranzeige oben rechts -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const loginBtn = document.getElementById('loginStatusBtn');
+
+    if (user && loginBtn) {
+      loginBtn.textContent = "Logged In";
+      loginBtn.style.pointerEvents = "none";
+      loginBtn.style.backgroundColor = "#ffd500";
+      loginBtn.style.color = "#000";
+    }
+
+    if (user) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "user-fixed";
+
+      const avatar = document.createElement("img");
+      avatar.src = user.character || "character1.gif";
+
+      const name = document.createElement("span");
+      name.textContent = user.username;
+
+      const logout = document.createElement("button");
+      logout.textContent = "Logout";
+      logout.onclick = () => {
+        localStorage.removeItem("user");
+        window.location.href = "login.html";
+      };
+
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(name);
+      wrapper.appendChild(logout);
+      document.body.appendChild(wrapper);
+    }
+  });
+</script>
+
+<!-- Hero Section -->
+<div class="hero-background">
+  <div class="hero-title">
+    <h1>CodePilot</h1>
+    <img src="rakete.png" alt="Rakete" class="rakete"/>
+  </div>
+  <p>Dein persönliches Wissens-Wiki mit Materialien, Aufgaben und Ressourcen.</p>
+  <button class="cta-button">Erkunde den Inhalt</button>
+</div>
+
+<!-- Wiki Section -->
+<div class="legend-section">
+  <h2 class="centered-title">
+    <img src="javatasse.png" alt="icon" class="title-icon">
+    Java Wiki
+  </h2>
+  <br>
+  <br>
+
+
+  <div class="course-container">
+    <div class="course-card">
+      <img src="unterlagen.jpg" alt="Vorlesungsunterlagen" class="course-img"
+           data-dark="unterlagen.jpg" data-light="unterlagen-light.jpg">
+      <div class="course-content">
+        <div class="course-label">Material</div>
+        <div class="course-title">Java Dungeon</div>
+        <div class="course-description">Tauche ein in eine Sammlung handverlesener YouTube-Tutorials – vom ersten Hello World bis zu komplexen Java-Projekten. Lernen mit Bild und Ton, direkt im Dungeon!</div>
+        <div class="level-badge">Dokumente</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <img src="Aufgabenight.jpeg" alt="Aufgaben" class="course-img"
+           data-dark="Aufgabenight.jpeg" data-light="Aufgabe.jpeg">
+      <div class="course-content">
+        <div class="course-label">Übung</div>
+        <div class="course-title">Java Bibliothek</div>
+        <div class="course-description">Strukturiertes Wissen für deinen Java-Weg: Lehrbeiträge, Grundlagen, Objektorientierung und praxisnahe Inhalte verständlich erklärt – deine persönliche Wissensquelle.</div>
+        <div class="level-badge">Interaktiv</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <img src="Zusammenfassungnight.jpeg" alt="Zusammenfassungen" class="course-img"
+           data-dark="Zusammenfassungnight.jpeg" data-light="Zusammenfassungen.jpeg">
+      <div class="course-content">
+        <div class="course-label">Wissen</div>
+        <div class="course-title">Java Wissensstätte</div>
+        <div class="course-description">Trainiere deinen Java-Verstand mit Quizfragen, Code-Snippets und kompakten Zusammenfassungen. Ideal zum Wiederholen, Vertiefen und Vorbereiten auf Prüfungen.</div>
+        <div class="level-badge">Kompakt</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Theme-Umschaltung -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.getElementById('toggle-mode');
+    const courseImages = document.querySelectorAll('.course-img');
+
+    function updateImages() {
+      const isLight = document.body.classList.contains('light-mode');
+      courseImages.forEach(img => {
+        const newSrc = isLight ? img.dataset.light : img.dataset.dark;
+        if (newSrc) img.src = newSrc;
+      });
+    }
+
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-mode');
+      toggleBtn.textContent = '☀️';
+    }
+
+    updateImages();
+
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      toggleBtn.textContent = isLight ? '☀️' : '🌙';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      updateImages();
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Konto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+  
+body {
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFklEQVRYR9WXURLDIAhE6/0PbSdOtUpcd1Gnpv1KGpTHBpCE1/cXq+vrMph7dGvXZTtpfW10DCA5jrH1H0Jhs5E0hnZdCR+vb5S8Nn8mQCeS9BdSalYJqMBjAGzq59xAESN7VFVUgV8AZB/dZBR7QTFDCqGquvUBVVoEtgIwpQRzmANSFHgWQKExHdIrPeuMvQNDarXe6nC/AutgV3JW+6bgqQLeV8FekRtgV+ToDKEKnACYKsfZjjkam7a0ZpYTytwmgainpC3HvwBocgKOxqRjehoR9DFKNFYtOwCGYCszobeCbl26N6yyQ6g8X/Wex/rBPsNEV6qAMaJPMynIHQCoSqS9JSMmwef51LflTgCRszU7DvAGiV6mHWfsaVUAAAAASUVORK5CYII=), auto;
+}
+
+
+    button:hover,
+a:hover,
+.bg-popup-btn:hover,
+.logout-bottom-btn:hover {
+    cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
+  }
+
+
+    .loader-overlay {
+  position: fixed;
+  z-index: 9999;
+  background: black;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.coin {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  animation: jump 0.8s infinite ease-in-out;
+}
+
+@keyframes jump {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-40px); }
+  100% { transform: translateY(0); }
+}
+
+.loading-text {
+  margin-top: 20px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  color: gold;
+  text-shadow: 1px 1px 0 #000;
+}
+
+   .char-desc {
+  font-size: 12px;
+  font-family: 'Press Start 2P', monospace;
+  margin-top: 12px;
+  line-height: 2.5;
+  
+}
+.bio-level {
+  font-size: 14px;
+  font-family: 'Press Start 2P', monospace;
+  color: #ffd700;
+}
+
+.banner-img-wrapper {
+  position: relative;
+}
+.banner-avatar {
+  position: absolute;
+  bottom: -40px;
+  left: 20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+border: 4px solid #3a4a6b; /* Darkmode-Grau wie bei bio-card */
+ background-color: #0a0a23; /* Darkmode-Grundfarbe */
+  z-index: 10;
+  image-rendering: pixelated;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* tieferer Schatten */
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.banner-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+body.light-mode .banner-avatar {
+    border-color: #e0e0e0;  /* heller Rand für Lightmode */
+ 
+  background-color: #fff;
+}
+
+
+body.light-mode .banner-avatar {
+  border-color: #111;
+  background-color: #fff;
+}
+.banner-container {
+  position: relative;
+  padding-bottom: 0px; /* Platz für Avatar */
+}
+
+    .user-fixed {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 999;
+}
+
+.user-fixed img {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+}
+
+.user-fixed span {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: white;
+}
+
+body.light-mode .user-fixed span {
+  color: black;
+}
+
+.user-fixed button {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 6px 10px;
+  background: #ffd500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding-top: 70px;
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a23;
+      color: white;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.light-mode {
+      background-color: #f5f5f5;
+      color: #111;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #0a0a23;
+      padding: 15px 40px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+
+    body.light-mode .navbar {
+      background-color: #ffffff;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .logo img {
+      height: 50px;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 8px;
+      transition: background 0.3s;
+    }
+
+    .navbar a:hover {
+      background: #ffd500;
+      border-radius: 5px;
+    }
+
+    body.light-mode .navbar a,
+    body.light-mode .logo {
+      color: #111;
+    }
+
+    .sign-up-btn {
+      background: #ffd500;
+      color: black;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 2px 2px 0 #000;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .toggle-mode-btn {
+      background: none;
+      border: 1px solid #fff;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    body.light-mode .toggle-mode-btn {
+      border-color: #111;
+      color: #111;
+    }
+
+    .banner-container {
+      width: 80%;
+      max-width: 1200px;
+      border-radius: 30px;
+      overflow: hidden;
+      margin: 0 auto 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .banner-img {
+  width: 100%;
+  height: 280px; /* vorher 180px */
+  object-fit: cover;
+  transition: background-image 0.5s ease;
+}
+
+.banner-container .profile-header #username {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 20px; /* ggf. kleiner, da die Schrift sehr breit ist */
+  margin-top: 60px;
+}
+
+
+   .profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 20px 0px;
+}
+
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .profile-pic {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+    }
+
+    .text-info h2 {
+      margin: 0;
+      font-size: 16px;
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    .bg-popup-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  background: #ffd500;
+  color: #000;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #000;
+  transition: transform 0.2s ease;
+}
+
+.bg-popup-btn:hover {
+  transform: scale(1.05);
+}
+
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1e1e2f;
+      border: 2px solid #3a4a6b;
+      padding: 15px;
+      z-index: 9999;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+      color: white;
+      border-radius: 20px;
+    }
+
+    body.light-mode .popup {
+      background: #fff;
+      border: 2px solid #ccc;
+      color: #000;
+    }
+
+    .popup img {
+      width: 150px;
+      height: 80px;
+      object-fit: cover;
+      margin: 5px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 10px;
+    }
+
+    .popup img:hover {
+      border-color: #ffd700;
+    }
+
+    .popup-close {
+      background: red;
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      float: right;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .content-wrapper {
+      width: 80%;
+      max-width: 1200px;
+      margin: 0 auto 20px;
+    }
+
+    .container {
+      display: flex;
+      gap: 30px;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    .bio-box {
+      flex: 1;
+      min-width: 250px;
+      max-width: 350px;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      flex: 3;
+      min-width: 300px;
+    }
+
+    .bio-card-wrapper {
+      perspective: 1000px;
+    }
+
+    .bio-card {
+      width: 100%;
+      height: 350px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      border-radius: 33px;
+    }
+
+    .bio-card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .bio-front, .bio-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      backface-visibility: hidden;
+      background-color: inherit;
+      color: inherit;
+      border: inherit;
+      padding: 16px;
+      box-shadow: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .bio-back {
+      transform: rotateY(180deg);
+    }
+
+    .gear-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: inherit;
+    }
+
+    .bio-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .bio-header img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .bio-level {
+      font-weight: bold;
+    }
+
+    .project-section .projects {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .project-card {
+      background: #1a1a2e;
+      border: 2px solid #333;
+      color: white;
+      border-radius: 30px;
+      box-shadow: 0 0 0 2px #e0e0e0;
+      flex: 1 1 250px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card img {
+      width: 100%;
+      border-radius: 8px;
+      height: 120px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .project-card h4 {
+      margin: 0 0 4px 0;
+      font-size: 14px;
+    }
+
+    .project-card p {
+      font-size: 13px;
+      margin: 0 0 6px 0;
+    }
+
+    .badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #eee;
+      font-size: 11px;
+      padding: 3px 6px;
+      border-radius: 8px;
+    }
+
+    .stats-section {
+      margin-top: auto;
+    }
+
+    .stats-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: #fff;
+      border: 2px solid #ccc;
+      border-radius: 30px;
+      padding: 16px;
+      flex: 1 1 150px;
+      text-align: center;
+      box-shadow: 4px 4px 0 #eee;
+    }
+
+    .stat-box .label,
+    .stat-box .value {
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .stat-box .label {
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .stat-box .value {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .blue .value { color: #3399ff; }
+    .red .value { color: #ff4d4d; }
+    .green .value { color: #4caf50; }
+    .purple .value { color: #cc66cc; }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .bio-box,
+      .right-column {
+        width: 100%;
+      }
+    }
+
+    .banner-container,
+    .bio-card,
+    .stat-box,
+    .project-card {
+      background-color: #1a1a2e;
+      color: white;
+      border: 2px solid #3a4a6b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    body.light-mode .banner-container,
+    body.light-mode .bio-card,
+    body.light-mode .stat-box,
+    body.light-mode .project-card {
+      background-color: #ffffff;
+      color: #111;
+      border: 2px solid #e0e0e0;
+    }
+
+    .section-box {
+      margin-top: 20px;
+      border-top: 1px solid #555;
+      padding-top: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    input {
+      padding: 6px;
+      font-size: 14px;
+      width: 100%;
+      border-radius: 4px;
+      border: none;
+      margin-top: 4px;
+    }
+
+    .save-btn {
+      background: #00b8ff;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
+      font-size: 10px;
+      margin-top: 10px;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+
+    .success {
+      color: limegreen;
+      font-size: 12px;
+    }
+  
+    .logout-bottom-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  background: #ffd500;
+  color: #000;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #000;
+  transition: transform 0.2s ease;
+  margin-left: 390px;
+}
+
+.logout-bottom-btn:hover {
+  transform: scale(1.05);
+}
+body:not(.light-mode) .badge {
+  background: #ffd700;
+  color: #000;
+}
+
+  .java-tip-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: gold;
+  background: #1a1a2e;
+  padding: 12px;
+  border: 2px dashed #ffd700;
+  border-radius: 10px;
+  margin-top: 10px;
+  text-shadow: 1px 1px 0 #000;
+}
+
+body.light-mode .java-tip-text {
+  background: #fffdd0;
+  color: #222;
+  border: 2px dashed #999;
+  text-shadow: none;
+}
+.badge.locked {
+  opacity: 0.4;
+  background-color: gray !important;
+  color: #aaa;
+  text-decoration: line-through;
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+
+.badge-img {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  transition: transform 0.3s ease;
+  filter: grayscale(100%) brightness(50%);
+  opacity: 0.5;
+}
+
+.badge-img.unlocked {
+  filter: none;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* Standard (Dark Mode) */
+.badge-card {
+  background-color: #1a1a2e;
+  color: white;
+  border: 2px solid #3a4a6b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-radius: 30px;
+  padding: 24px;
+  margin-top: 20px;
+}
+
+.badge-card .badge-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+/* Light Mode */
+body.light-mode .badge-card {
+  background-color: #ffffff;
+  color: #111;
+  border: 2px solid #e0e0e0;
+  
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+
+<!-- Navigation (aus Kursseite übernommen) -->
+<div class="navbar">
+  <div class="navbar-left">
+    <div class="logo">
+     <img src="rakete.png" alt="Logo" href="#" onclick="navigateWithLoader('start.html')"class="active"/>
+      CodePilot
+    </div>
+    <a href="#" onclick="navigateWithLoader('seite1.html')">Home</a>
+    <a href="#" onclick="navigateWithLoader('index.html')">AI</a>
+    <a href="#" onclick="navigateWithLoader('seite2.html')">Quiz</a>
+    <a href="#" onclick="navigateWithLoader('wiki.html')">Wiki</a>
+    <a href="#" onclick="navigateWithLoader('konto.html')" class="active">Konto</a>
+    <a href="#" class="sign-up-btn" id="loginStatusBtn">Sign up</a>
+    <button id="toggle-mode" class="toggle-mode-btn">🌙</button>
+    <div style="text-align: center; margin-left: 100px 0;">
+  <button id="bottomLogoutBtn" class="logout-bottom-btn">Logout</button>
+</div>
+  </div>
+</div>
+
+
+<!-- Banner -->
+<div class="banner-container">
+  <div class="banner-img-wrapper">
+    <img id="banner" src="banner1.gif" alt="Banner" class="banner-img" />
+    <img id="profile-avatar" src="character1.gif" alt="Avatar" class="banner-avatar" />
+  </div>
+
+  <div class="profile-header">
+    <div class="user-info">
+      <h2 id="username">Benutzername</h2>
+    </div>
+    <button class="bg-popup-btn" onclick="openPopup()">🎨 Hintergrund</button>
+  </div>
+</div>
+</div>
+
+<!-- Popup -->
+<div id="popup" class="popup">
+  <button class="popup-close" onclick="closePopup()">X</button>
+  <div>
+    <img src="banner1.gif" onclick="changeBanner(0)">
+    <img src="banner2.gif" onclick="changeBanner(1)">
+    <img src="banner3.gif" onclick="changeBanner(2)">
+    <img src="banner4.gif" onclick="changeBanner(3)">
+    <img src="banner5.gif" onclick="changeBanner(4)">
+    <img src="banner6.gif" onclick="changeBanner(5)">
+     <img src="banner7.gif" onclick="changeBanner(6)">
+
+  </div>
+</div>
+
+<!-- Inhalt -->
+<div class="content-wrapper">
+  <div class="container">
+    <!-- Bio (links) -->
+    <div class="bio-box">
+  <h3>Profil</h3>
+
+  <!-- Bio-Karte -->
+  <div class="bio-card-wrapper">
+    <div class="bio-card" id="bioCard">
+      <!-- Vorderseite -->
+      <div class="bio-front">
+        <div class="bio-header">
+          <img src="https://img.icons8.com/color/48/medal2--v1.png">
+          <span class="bio-level" id="levelDisplay">Level 1</span>
+          <button class="gear-btn" onclick="flipCard()">⚙️</button>
+        </div>
+        <div id="charDescription" class="char-desc"></div>
+        <ul class="bio-info"></ul>
+      </div>
+
+      <!-- Rückseite -->
+      <div class="bio-back">
+        <div class="bio-header">
+          <button class="gear-btn" onclick="flipCard()">🔙</button>
+        </div>
+        <div class="section-box">
+          <h3>🔒 Passwort ändern</h3>
+          <div class="form-group">
+            <label>Altes Passwort</label>
+            <input type="password" id="oldPassword" />
+          </div>
+          <div class="form-group">
+            <label>Neues Passwort</label>
+            <input type="password" id="newPassword" />
+          </div>
+          <button class="save-btn" onclick="changePassword()">Speichern</button>
+          <p class="error" id="passError"></p>
+          <p class="success" id="passSuccess"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kapitel-Badges-Container -->
+  <div class="badge-card">
+  <h3 class="badge-title">📘 Kapitel-Badges</h3>
+  <div id="badgeGrid" class="badges">
+    <img src="HelloWorldx.png" class="badge-img locked" alt="Hello World">
+    <img src="Variablenx.png" class="badge-img locked" alt="Variablen">
+    <img src="Kontrollfussx.png" class="badge-img locked" alt="Kontrollfluss">
+    <img src="Schleifenx.png" class="badge-img locked" alt="Schleifen">
+    <img src="Vererbungx.png" class="badge-img locked" alt="Vererbung">
+    <img src="Arraysx.png" class="badge-img locked" alt="Arrays">
+    <img src="Methodenx.png" class="badge-img locked" alt="Methoden">
+    <img src="KlassenUndObjektex.png" class="badge-img locked" alt="Klassen & Objekte">
+    <img src="ExceptionHandlingx.png" class="badge-img locked" alt="Exception Handling">
+  </div>
+</div>
+
+</div>
+       
+<div class="project-section">
+  <h3>Zuletzt angesehen</h3>
+  <div class="projects"> <!-- ✅ Richtig gruppiert -->
+    <div class="project-card">
+      <img src="wikiday.jpeg" alt="Wiki-Aktivität">
+      <h4>🧠 Zeit in der Wiki</h4>
+      <p>Du hast insgesamt <strong id="wikiTime">00:00:00</strong> Stunden in der Java-Wissensdatenbank verbracht. Weiter so – Wissen ist Macht!</p>
+      <div class="badges">
+        <span class="badge">Wiki</span>
+        <span class="badge">Lernzeit</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="Zusammenfassungen.jpeg" alt="Übungsstatistik">
+      <h4>✅ Erfolgreiche Übungen</h4>
+      <p>Du hast bereits <strong id="solvedExercises">0</strong> Übungen abgeschlossen – dein Java-Kung-Fu wächst stetig!</p>
+      <div class="badges">
+        <span class="badge">Übungen</span>
+        <span class="badge">Lernfortschritt</span>
+      </div>
+    </div>
+    <div class="project-card">
+  <img src="dungeon.gif" alt="Video-Aktivität">
+  <h4>🎥 Zeit auf der Videoseite</h4>
+  <p>Du hast <strong id="videoTime">00:00:00</strong> Stunden mit Videolernen verbracht. Weiter so – audiovisuelle Bildung rockt!</p>
+  <div class="badges">
+    <span class="badge">Video</span>
+    <span class="badge">Lernzeit</span>
+  </div>
+</div>
+<div class="project-card">
+  <img src="Aufgabe.jpeg" alt="Java Bibliothek">
+  <h4>📘 Zeit in der Bibliothek</h4>
+  <p>Du hast <strong id="bibTime">00:00:00</strong> Stunden in der Java Bibliothek verbracht. Dein Wissensdurst ist beeindruckend!</p>
+  <div class="badges">
+    <span class="badge">Bibliothek</span>
+    <span class="badge">Lernzeit</span>
+  </div>
+</div>
+
+
+</div>
+
+
+      <div class="stats-section">
+        <h3>Statistiken</h3>
+        <div class="stats-grid">
+          <div class="stat-box blue">
+            <div class="label">ÜBUNGEN</div>
+            <div class="value">169</div>
+          </div>
+          <div class="stat-box red">
+            <div class="label">GESAMT-XP</div>
+            <div class="value">2620</div>
+          </div>
+          <div class="stat-box green">
+            <div class="label">Kursabzeichen</div>
+            <div class="value">30</div>
+          </div>
+          <div class="stat-box purple">
+            <div class="label">TÄGLICHE STREIFEN</div>
+            <div class="value">0</div>
+          </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+const banners = [
+  "banner1.gif",
+  "banner2.gif",
+  "banner3.gif",
+  "banner4.gif",
+  "banner5.gif",
+  "banner6.gif",
+  "banner7.gif"
+];
+
+const characterImages = [
+  'character1.gif', 'character2.gif', 'character3.gif', 'character4.gif',
+  'character5.gif', 'character6.gif', 'character7.gif', 'character8.gif',
+  'character9.gif', 'character10.gif', 'character11.gif', 'character12.gif'
+];
+
+const characterDescriptions = [
+  '"Cyron – Ein cybernetischer Krieger aus der Eiszeit. Kühl im Kopf, tödlich im Kampf."',
+  '"Pixelkaiser – Ein königlicher Streiter mit Krone und rotem Umhang. Seine Loyalität kennt keine Grenzen."',
+  '"Rex – Der pixelige Rebell mit Stirnband und stählerner Faust. Kämpft für Gerechtigkeit und Frühstücksflocken!"',
+  '"Nullbit – Ein gescheitertes Experiment der 8-Bit-Wissenschaft. Kein Gesicht, kein Name – nur Code."',
+  '"Neonshade – Ein Schatten aus den Tiefen der Zukunft. Niemand weiß, wer sich unter der Maske verbirgt."',
+  '"Lunara – Eine rätselhafte Magierin mit himmelblauen Haaren. Hüterin vergessener Zauber."',
+  '"Lea – Eine Naturwächterin mit grüner Aura. Ihre Blätter flüstern von alten Legenden und schnellen Fluchten."',
+  '"Shadow – Der heldenhafte Krieger der Nordlande. Hat mehr Mut als Pixel in seinem Schwertgriff."',
+  '"Daxter – Ein lautloser Kämpfer aus den Schatten von Bitō. Sein virtueller Mantel weht nur, wenn Gefahr droht."',
+  '"Glitron – Ein tanzender Datenspeer aus der Galaxie Zeta. Seine Bewegungen sind Code – sein Herz ein Bug."',
+  '"Bluette – Die Wirbelwind-Zauberin mit kühlem Blick. Kontrolliert Regen, Wind und dein Schicksal."',
+  '"Hexa – Die violette Schattenhexe mit flammenden Augen. Flüstert Zauber, die selbst die Zeit erschüttern."'
+];
+
+function getLevel(xp) {
+  return Math.floor(Math.sqrt(xp / 10));
+}
+
+function flipCard() {
+  const card = document.getElementById('bioCard');
+  card.classList.toggle('flipped');
+}
+
+function openPopup() {
+  document.getElementById('popup').style.display = 'block';
+}
+function closePopup() {
+  document.getElementById('popup').style.display = 'none';
+}
+
+function changeBanner(index) {
+  document.getElementById('banner').src = banners[index];
+  localStorage.setItem("selectedBanner", index);
+  closePopup();
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const wikiSeconds = localStorage.getItem("wikiTimeSeconds") || 0;
+  const videoSeconds = localStorage.getItem("videoTimeSeconds") || 0;
+  const bibSeconds = localStorage.getItem("bibTimeSeconds") || 0;
+
+
+
+function formatTime(s) {
+  const hrs = String(Math.floor(s / 3600)).padStart(2, '0');
+  const min = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+  const sec = String(s % 60).padStart(2, '0');
+  return `${hrs}:${min}:${sec}`;
+}
+
+document.getElementById("wikiTime").textContent = formatTime(parseInt(wikiSeconds));
+document.getElementById("videoTime").textContent = formatTime(parseInt(videoSeconds));
+document.getElementById("bibTime").textContent = formatTime(parseInt(bibSeconds));
+
+
+function formatTime(s) {
+  const hrs = String(Math.floor(s / 3600)).padStart(2, '0');
+  const min = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+  const sec = String(s % 60).padStart(2, '0');
+  return `${hrs}:${min}:${sec}`;
+}
+
+document.getElementById("wikiTime").textContent = formatTime(parseInt(wikiSeconds));
+  const savedBanner = localStorage.getItem("selectedBanner");
+  if (savedBanner !== null) {
+    document.getElementById("banner").src = banners[parseInt(savedBanner)];
+  }
+
+  const toggleBtn = document.getElementById('toggle-mode');
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-mode');
+    toggleBtn.textContent = '☀️';
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    toggleBtn.textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    alert("Bitte logge dich zuerst ein.");
+    window.location.href = "login.html";
+    return;
+  }
+  const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn && user) {
+  logoutBtn.style.display = "inline-block"; // zeige den Button
+  logoutBtn.onclick = () => {
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+  };
+}
+const bottomLogoutBtn = document.getElementById('bottomLogoutBtn');
+if (bottomLogoutBtn) {
+  bottomLogoutBtn.onclick = () => {
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+  };
+}
+
+
+
+  // Navbar-Status
+  const loginBtn = document.getElementById('loginStatusBtn');
+  if (loginBtn) {
+    loginBtn.textContent = "Logged In";
+    loginBtn.style.pointerEvents = "none";
+    loginBtn.style.backgroundColor = "#ffd500";
+    loginBtn.style.color = "#000";
+  }
+
+  // Benutzeranzeige
+  const wrapper = document.createElement("div");
+  wrapper.className = "user-fixed";
+
+  const avatar = document.createElement("img");
+  avatar.src = user.character || "character1.gif";
+
+  const name = document.createElement("span");
+  name.textContent = user.username;
+
+  const logout = document.createElement("button");
+  logout.textContent = "Logout";
+  logout.onclick = () => {
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+  };
+
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(name);
+  wrapper.appendChild(logout);
+  document.body.appendChild(wrapper);
+
+  // Setzen in Banner
+  document.getElementById("username").textContent = user.username;
+  document.getElementById("profile-avatar").src = user.character || "character1.gif";
+
+  try {
+    const res = await fetch("http://localhost:3000/api/get-user-stats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: user.username })
+    });
+
+    const data = await res.json();
+
+    // Level und Stats
+    const level = getLevel(data.xp);
+    document.getElementById("levelDisplay").textContent = `Level ${level}`;
+    document.getElementById("solvedExercises").textContent = data.exercises || 0;
+    document.querySelector(".stat-box.blue .value").textContent = data.exercises;
+    document.querySelector(".stat-box.red .value").textContent = data.xp;
+    document.querySelector(".stat-box.green .value").textContent = data.badges;
+    document.querySelector(".stat-box.purple .value").textContent = data.streak;
+// Kursabzeichen freischalten
+const thresholds = [5, 10, 15, 20, 25, 30];
+const badgeGrid = document.getElementById("badgeGrid");
+
+badgeGrid.querySelectorAll("img").forEach((img, index) => {
+  const needed = thresholds[index];
+  if (data.exercises >= needed) {
+    img.classList.remove("locked");
+    img.classList.add("unlocked");
+  }
+});
+
+
+    // Beschreibung
+    const index = characterImages.indexOf(user.character);
+    if (index !== -1) {
+      document.getElementById("charDescription").textContent = characterDescriptions[index];
+    }
+
+  } catch (err) {
+    console.error("Fehler beim Laden der Statistiken:", err);
+  }
+});
+
+
+</script>
+  <script src="loader.js"></script>
+<div id="loader" class="loader-overlay">
+  <div class="loader-content">
+    <img src="coin.png.png" alt="Münze" class="coin" />
+    <p class="loading-text">LÄDT...</p>
+  </div>
+  
+
+</body>
+</html>
