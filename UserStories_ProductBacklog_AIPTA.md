@@ -1,34 +1,37 @@
-
-# 🧾 User Stories & Product Backlog – AIPTA
+# 🧾 User Stories & Product Backlog – Code Pilot
 
 ## 🎯 User Stories
 
-| ID   | User Story                                                                                         | Priorität |
-|------|-----------------------------------------------------------------------------------------------------|-----------|
-| US1  | Als *Student*in möchte ich Programmierfragen in natürlicher Sprache stellen, um sofort Hilfe zu bekommen. | Hoch      |
-| US2  | Als *Student*in möchte ich Erklärungen zu Grundkonzepten (z. B. Variablen, Schleifen), um besser zu verstehen. | Hoch      |
-| US3  | Als *Student*in möchte ich Hilfe zu meinen Code-Fehlern erhalten, um diese selbstständig zu lösen.     | Hoch      |
-| US4  | Als *Student*in möchte ich Übungsaufgaben mit Lösungen vergleichen, um meinen Fortschritt zu überprüfen. | Mittel    |
-| US5  | Als *Tutor*in möchte ich typische Fragen der Studierenden einsehen, um gezielt unterstützen zu können. | Mittel    |
-| US6  | Als *Dozent*in möchte ich Aufgaben hochladen, damit der Assistent passende Erklärungen generieren kann. | Niedrig   |
-| US7  | Als *Student*in möchte ich meinen Lernstand über kleine Quizze überprüfen, um gezielter lernen zu können. | Mittel    |
+| ID   | User Story                                                                                          | Priorität |
+|------|------------------------------------------------------------------------------------------------------|-----------|
+| US1  | Als *Student*in möchte ich Java-Fragen in natürlicher Sprache stellen können, um direkt Hilfe zu erhalten. | Hoch      |
+| US2  | Als *Student*in möchte ich Erklärungen zu Java-Grundlagen (Variablen, Schleifen, etc.) abrufen können.    | Hoch      |
+| US3  | Als *Student*in möchte ich mein Wissen mit Quizaufgaben (MC/Lücken) testen, um meinen Lernfortschritt zu sehen. | Hoch      |
+| US4  | Als *Student*in möchte ich Java-Code selbst schreiben und ausführen, um das Gelernte anzuwenden.     | Hoch      |
+| US5  | Als *Student*in möchte ich für richtige Lösungen XP und Badges bekommen, um motiviert zu bleiben.    | Mittel    |
+| US6  | Als *Student*in möchte ich meinen Fortschritt (z. B. Übungen, XP) jederzeit einsehen können.         | Mittel    |
+| US7  | Als *Student*in möchte ich meine bisherigen Fragen und Antworten im Chatverlauf nachlesen können.    | Mittel    |
+| US8  | Als *Student*in möchte ich passende Lernvideos zu Themen finden, um Inhalte visuell zu vertiefen.    | Mittel    |
 
 ---
 
-## 📋 Initialer Product Backlog
+## 📋 Product Backlog – Code Pilot
 
-| ID   | Titel                                   | Typ        | Priorität | Zugehörige User Story |
-|------|-----------------------------------------|------------|-----------|------------------------|
-| PB1  | Frage-Antwort-Interface implementieren   | Feature    | Hoch      | US1                    |
-| PB2  | Modul für Grundlagen-Erklärungen (Syntax, Variablen, etc.) | Feature | Hoch | US2                   |
-| PB3  | Code-Analyse-Funktion bei Fehlermeldungen | Feature    | Hoch      | US3                    |
-| PB4  | Vergleichsfunktion für Übungsaufgaben     | Feature    | Mittel    | US4                    |
-| PB5  | Statistiken zu häufigen Fragen anzeigen   | Feature    | Mittel    | US5                    |
-| PB6  | Upload-Interface für Dozent*innen         | Admin-Tool | Niedrig   | US6                    |
-| PB7  | Quiz-Funktion mit Antwortauswertung       | Feature    | Mittel    | US7                    |
+| ID   | Feature / Aufgabe                                 | Typ        | Priorität | Zugehörige User Story |
+|------|---------------------------------------------------|------------|-----------|------------------------|
+| PB1  | Integration eines KI-Chatbots zur Java-Hilfe      | Feature    | Hoch      | US1, US2, US7          |
+| PB2  | Erstellung der Java-Wissensbibliothek (`Javabib`) | Content    | Hoch      | US2, US8               |
+| PB3  | Entwicklung von Multiple-Choice- und Lückentext-Quizseiten | Feature | Hoch | US3, US5               |
+| PB4  | Live-Java-Code-Editor mit Lösungskontrolle        | Feature    | Hoch      | US4                    |
+| PB5  | XP- & Badgesystem mit Fortschrittsanzeige         | Feature    | Mittel    | US5, US6               |
+| PB6  | Benutzerprofil mit Avatar & Levelanzeige          | Feature    | Mittel    | US6                    |
+| PB7  | Chatverlauf lokal speichern und wiederherstellen  | Feature    | Mittel    | US7                    |
+| PB8  | YouTube-Videothek mit Java-Themen (Sidebar)       | Content    | Mittel    | US8                    |
+| PB9  | Login-/Registrierungsseite mit Charakterauswahl   | Feature    | Mittel    | Alle                   |
+| PB10 | Dark-/Light-Mode & Retro-Design                   | UI/UX      | Niedrig   | Alle                   |
 
 ---
 
-**Stand**: 07.04.2025  
-**Modul**: IT-Innovationen  
-**Projekt**: AIPTA – AI-based Personal Teaching Assistant
+**📆 Stand**: 18.06.2025  
+**🎓 Modul**: IT-Innovationen SS 2025  
+**🧠 Projekt**: Code Pilot – AI-gestützter Java-Lernassistent
